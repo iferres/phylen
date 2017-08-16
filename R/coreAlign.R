@@ -34,7 +34,7 @@ coreAlign <- function(gffs = character(),
                                write.in.path = 'aa')
     aas <- paste0(tmp,'/', sub('gff$','faa',rev(strsplit(x,'/')[[1]])[1]))
 
-
+    blout <- hmmSearch()
 
 
   }, mc.cores = n_threads, mc.preschedule = FALSE)
