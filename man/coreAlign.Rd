@@ -4,13 +4,13 @@
 \alias{coreAlign}
 \title{Compute Core Genome Alignment}
 \usage{
-coreAlign(gffs = character(), hmm = character(),
+coreAlign(gffs = character(), hmmTarGz = character(),
   outfile = "coregenome.aln", level = 1, n_threads = 1L)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
 
-\item{hmm}{A \code{character} string with the path to the \code{.hmm.tar.gz}
+\item{hmmTarGz}{A \code{character} string with the path to the \code{.hmm.tar.gz}
 file downloaded from EggNOG database website.}
 
 \item{outfile}{A \code{character} string with the coregenome alignment file

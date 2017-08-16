@@ -3,7 +3,7 @@
 #' @description Identify and align core genes, and concatenate the alignments
 #' in a single file suitable for phylogenetic analyses.
 #' @param gffs A \code{character} vector with the gff file paths.
-#' @param hmm A \code{character} string with the path to the \code{.hmm.tar.gz}
+#' @param hmmTarGz A \code{character} string with the path to the \code{.hmm.tar.gz}
 #' file downloaded from EggNOG database website.
 #' @param outfile A \code{character} string with the coregenome alignment file
 #' name. (Default: coregenome.aln).
@@ -15,7 +15,7 @@
 #' @export
 #' @author Ignacio Ferres
 coreAlign <- function(gffs = character(),
-                      hmm = character(),
+                      hmmTarGz = character(),
                       outfile = 'coregenome.aln',
                       level = 1,
                       n_threads = 1L){
@@ -23,6 +23,7 @@ coreAlign <- function(gffs = character(),
   #Err
 
   #Decompress hmm.tar.gz, concatenate models, hmmpress
+  hmm <- setHmm(hmmTarGz)
 
   #Extract aa seqs from gffs
   hits <- mclapply(gffs, function(x){
@@ -34,7 +35,8 @@ coreAlign <- function(gffs = character(),
                                write.in.path = 'aa')
     aas <- paste0(tmp,'/', sub('gff$','faa',rev(strsplit(x,'/')[[1]])[1]))
 
-    blout <- hmmSearch()
+    blout <- hmmSearch(aas, hmm = hmm[1], n_threads = 0)
+
 
 
   }, mc.cores = n_threads, mc.preschedule = FALSE)

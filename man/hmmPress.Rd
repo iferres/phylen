@@ -4,11 +4,9 @@
 \alias{hmmPress}
 \title{hmmPress}
 \usage{
-hmmPress(bin, model)
+hmmPress(model)
 }
 \arguments{
-\item{bin}{The location of \code{hmmpress} binary.}
-
 \item{model}{\code{character} The name of the hmm file.}
 }
 \value{

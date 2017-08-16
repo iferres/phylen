@@ -2,11 +2,10 @@
 #' @name hmmPress
 #' @title hmmPress
 #' @description Wrapper function of \code{hmmpress} (HMMER 3).
-#' @param bin The location of \code{hmmpress} binary.
 #' @param model \code{character} The name of the hmm file.
 #' @return The names of indexed files.
-hmmPress <- function(bin, model){
-  hmmpress <- paste(bin, '-f', model)
+hmmPress <- function(model){
+  hmmpress <- paste('hmmpress -f', model)
   system(hmmpress, ignore.stdout = TRUE)
   o <- paste0(model, c('','.h3f', '.h3i', '.h3m', '.h3p'))
   o
@@ -16,29 +15,23 @@ hmmPress <- function(bin, model){
 #' @title Run hmmsearch (HMMER 3)
 #' @description Takes a fasta file and a Hidden Markov Model profile and
 #' performs a search of the former over the latter.
-#' @param bin The location of \code{hmmsearch} binary.
 #' @param fasta A protein fasta file.
 #' @param hmm A hmm file. Must be pressed (see hmmpress from HMMER manual).
 #' @param oty The \code{hmmsearch} output type.
-#' @param cut One of "ga" or "tc". See HMMER 3.1b2 manual.
 #' @param n_threads An \code{integer}. The number of cores to use.
 #' @return The path to a temporary file where the hmmsearch output is placed.
-hmmSearch <- function(bin,
-                      fasta,
+hmmSearch <- function(fasta,
                       hmm,
                       oty = 'domtblout',
-                      cut = 'ga',
                       n_threads = 1L){
 
   oty <- match.arg(oty, c('tblout', 'domtblout'))
-  cut <- match.arg(cut, c('ga', 'tc'))
 
   #run hmmsearch
   blout <- tempfile(pattern = 'tmpo', fileext = '.tab')
-  hmmse <- paste0(bin,' -o /dev/null --noali',
+  hmmse <- paste0('hmmsearch -o /dev/null --noali',
                    paste0(' --', oty, ' '),
                    blout,
-                   paste0(' --cut_', cut),
                    paste0(' --cpu ', n_threads),
                    ' ',
                    hmm,
