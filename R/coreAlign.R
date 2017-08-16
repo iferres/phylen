@@ -10,6 +10,8 @@
 #' @param level \code{numeric}
 #' @param n_threads \code{integer} The number of cpus to use.
 #' @return A core genome alignment file.
+#' @importFrom parallel mclapply splitIndices
+#' @importFrom seqinr write.fasta
 #' @export
 #' @author Ignacio Ferres
 coreAlign <- function(gffs = character(),
@@ -20,9 +22,24 @@ coreAlign <- function(gffs = character(),
 
   #Err
 
-  #Extract aa seqs from gffs
+  #Decompress hmm.tar.gz, concatenate models, hmmpress
 
-  #Search and filter
+  #Extract aa seqs from gffs
+  hits <- mclapply(gffs, function(x){
+
+    tmp <- tempdir()
+    aas <- extractSeqsFromGff3(x,
+                               keep = 'none',
+                               in.path = tmp,
+                               write.in.path = 'aa')
+    aas <- paste0(tmp,'/', sub('gff$','faa',rev(strsplit(x,'/')[[1]])[1]))
+
+
+
+
+  }, mc.cores = n_threads, mc.preschedule = FALSE)
+
+
 
   #Merge
 
