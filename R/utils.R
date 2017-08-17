@@ -50,7 +50,8 @@ setHmm <- function(hmmTarGz){
   hmm <- paste0(dirname(hmmTarGz), '/', nam)
   cate <- paste0('cat ',
                  paste(fils, collapse = ' '),
-                 ' > ',hmm)
+                 ' > ',
+                 hmm)
   system(cate)
   unlink(hmms, recursive = TRUE)
   cat('DONE!\n')

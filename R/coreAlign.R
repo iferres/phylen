@@ -36,6 +36,7 @@ coreAlign <- function(gffs = character(),
     aas <- paste0(tmp,'/', sub('gff$','faa',rev(strsplit(x,'/')[[1]])[1]))
 
     blout <- hmmSearch(aas, hmm = hmm[1], n_threads = 0)
+    m <- readDomtblout(domtblout = blout)
 
 
 
