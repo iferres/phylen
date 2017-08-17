@@ -33,19 +33,30 @@ untargz <- function(targzfile, exdir){
 #' @author Ignacio Ferres
 setHmm <- function(hmmTarGz){
 
+  hmmTarGz <- normalizePath(hmmTarGz)
+
   cat('Decompressing.. ')
   hmms <- untargz(targzfile = hmmTarGz)
+  isdir <- which(file.info(hmms)$isdir)
+  if (length(isdir)>0){
+    fils <- hmms[-isdir]
+  }else{
+    fils <- hmms
+  }
   cat('DONE!\n')
 
   cat('Concatenating.. ')
   nam <- sub('.tar.gz', '', rev(strsplit(hmmTarGz, '/')[[1]])[1], fixed = T)
-  cate <- paste0('cat ', paste(hmms[1:5], collapse = ' '), ' > ',nam)
+  hmm <- paste0(dirname(hmmTarGz), '/', nam)
+  cate <- paste0('cat ',
+                 paste(fils, collapse = ' '),
+                 ' > ',hmm)
   system(cate)
-  file.remove(hmms)
+  unlink(hmms, recursive = TRUE)
   cat('DONE!\n')
 
   cat('Pressing.. ')
-  hmm <- hmmPress(model = nam)
+  hmm <- hmmPress(model = hmm)
   cat('DONE!\n')
 
   return(hmm)
