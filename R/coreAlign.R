@@ -15,6 +15,15 @@
 #' "hmmpress" from HMMER 3.1b2 manual.
 #' @param outfile A \code{character} string with the coregenome alignment file
 #' name. (Default: coregenome.aln).
+#' @param aligner The aligner to use. Currenly only \code{"mafft"} is
+#' implemented.
+#' @param aliParam \code{list()} of parameters to pass to \code{aligner}.
+#' @param ogsDirNam \code{character()} The directory name where to put
+#' intermediate files. If not provided or already exists, it will be
+#' automatically generated. This directory is removed at the end of the
+#' pipeline, unless \code{keepOgs = TRUE} (see below).
+#' @param keepOgs \code{logical()} If want to keep an intermediate directory
+#' fasta files containing the orthologous groups (DEFAULT: \code{FALSE}).
 #' @param level \code{numeric}
 #' @param n_threads \code{integer} The number of cpus to use.
 #' @return A core genome alignment file.
@@ -25,11 +34,16 @@
 coreAlign <- function(gffs = character(),
                       hmmFile = character(),
                       isCompressed = TRUE,
-                      outfile = 'coregenome.aln',
+                      outfile = './coregenome.aln',
+                      aligner = 'mafft',
+                      aliParam = list(),
+                      ogsDirNam,
+                      keepOgs = FALSE,
                       level,
                       n_threads = 1L){
 
   #Err
+  wd <- paste0(normalizePath(dirname(outfile)), '/')
 
   #Decompress hmm.tar.gz, concatenate models, hmmpress
   hmm <- setHmm(hmm = hmmFile, isCompressed)
@@ -96,14 +110,34 @@ coreAlign <- function(gffs = character(),
   ge <- names(which(colSums(pm) >= nrow(pm) * level))
 
   #Identify core-genes
+  cat('Getting core-genes.. ')
   ges <- lapply(ge, function(x){
     unlist(lapply(hits, function(y){
       as.character(y[which(names(y)%in%x)])
     }))
   })
   names(ges) <- ge
-  lapply(ge, function(x){})
+
   #Extract cds from gffs
+  ffns <- mclapply(gffs, function(x){
+    extractSeqsFromGff3(x, keep = 'dna', write.in.path = 'none')
+  }, mc.cores = n_threads, mc.preschedule = FALSE)
+  ffns <- unlist(ffns, recursive = FALSE)
+  cat('DONE!\n')
+
+  #Write groups of orthologous
+  cat('Writting fastas.. ')
+  if (missing(ogsDirNam) || dir.exists(ogsDirNam)){
+    now <- format(Sys.time(), "%b%d%H%M%S")
+    ogsDirNam <- paste0(wd, 'phylen_', now, '/')
+    dir.create(ogsDirNam)
+  }
+  lapply(names(ges), function(x){
+    write.fasta(ffns[ges[[x]]],
+                names = ges[[x]],
+                file.out = paste0(ogsDirNam, x,'.fasta'))
+  })
+  cat('DONE!\n')
 
   #Align
 
