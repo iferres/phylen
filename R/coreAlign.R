@@ -56,26 +56,29 @@ coreAlign <- function(gffs = character(),
     sp <- split(m, m$Query)
     assig <-lapply(sp, function(y){
       sp2 <- split(y, y$Hit)
-      hi <- do.call(rbind,lapply(sp2, function(z){sum(z$Score / sum(z$End-z$Start))}))
-      rownames(hi)[which.max(hi[,1])]
+      hi <- do.call(rbind,lapply(sp2, function(z){sum(z$Score) / sum(z$End-z$Start)}))
+      ma <- which.max(hi[,1])
+      c(rownames(hi)[ma], hi[ma, 1])
     })
-    vs <- do.call(c, assig)
-    vs
+    vs <- as.data.frame(do.call(rbind, assig))
+    colnames(vs) <- c('Model', 'MeanScore')
+    sp <- split(vs, vs$Model)
+    lp <- lapply(sp, function(y){rownames(y)[which.max(y$MeanScore)]})
+    do.call(c,lp)
 
   }, mc.cores = n_threads, mc.preschedule = FALSE)
   cat('DONE!\n')
 
   #Merge
   cat('Computing panmatrix.. ')
-  pm <- lapply(hits, function(x){ table(factor(x, levels = lev)) })
+  pm <- lapply(hits, function(x){ table(factor(names(x), levels = lev)) })
   ntb <- unlist(lapply(hits, function(x){ strsplit(names(x[1]), ';')[[1]][1] }))
   names(pm) <- ntb
   pm <- do.call(rbind, pm)
   pm <- pm[, -which(colSums(pm)==0)]
-  pm[which(pm>1)] <- 1L
   cat('DONE!\n')
 
-  #Identify core-genes
+  #Identify core-models
   if (missing(level)){
     sq <- seq(1, 0.85, -0.01)
     ev <- sapply(sq, function(x){
@@ -89,7 +92,17 @@ coreAlign <- function(gffs = character(),
          las=1)
     level <- as.integer(readline(prompt = 'Choose a percentage:'))
   }
+  level <- level/100
+  ge <- names(which(colSums(pm) >= nrow(pm) * level))
 
+  #Identify core-genes
+  ges <- lapply(ge, function(x){
+    unlist(lapply(hits, function(y){
+      as.character(y[which(names(y)%in%x)])
+    }))
+  })
+  names(ges) <- ge
+  lapply(ge, function(x){})
   #Extract cds from gffs
 
   #Align
