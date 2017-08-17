@@ -5,11 +5,16 @@
 \alias{setHmm}
 \title{Prepare Compressed Hmm Files To Hmmsearch}
 \usage{
-setHmm(hmmTarGz)
+setHmm(hmm = character(), isCompressed = TRUE)
 }
 \arguments{
-\item{hmmTarGz}{The path to the \code{.hmm.tar.gz} file downloaded from
-EggNOG website.}
+\item{hmm}{The path to the \code{.hmm.tar.gz} file downloaded from
+EggNOG website, or the already prepared \code{hmm} text file.}
+
+\item{isCompressed}{\code{logical()} If the \code{hmm} points to the
+\code{hmm.tar.gz} file, it should be set to \code{TRUE}. If the pipeline has
+been already ran, the \code{hmm} parameter should point to the ".hmm" file
+that was generated.}
 }
 \value{
 A \code{character} vector with the names of the hmm file and their
@@ -18,6 +23,11 @@ indices.
 \description{
 Decompress, concatenate and press (\code{hmmpress}) hmm files
 to allow \code{hmmsearch} to run.
+}
+\details{
+If the pipeline was ran before, the function will also check for
+index files and will produce them if any of the required is missing. See
+"hmmpress" from HMMER 3.1b2 manual.
 }
 \author{
 Ignacio Ferres

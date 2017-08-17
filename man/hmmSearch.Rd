@@ -4,7 +4,7 @@
 \alias{hmmSearch}
 \title{Run hmmsearch (HMMER 3)}
 \usage{
-hmmSearch(fasta, hmm, oty = "domtblout", n_threads = 1L)
+hmmSearch(fasta, hmm, eval = "1e-10", oty = "domtblout", n_threads = 1L)
 }
 \arguments{
 \item{fasta}{A protein fasta file.}

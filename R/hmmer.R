@@ -22,6 +22,7 @@ hmmPress <- function(model){
 #' @return The path to a temporary file where the hmmsearch output is placed.
 hmmSearch <- function(fasta,
                       hmm,
+                      eval = '1e-10',
                       oty = 'domtblout',
                       n_threads = 1L){
 
@@ -29,14 +30,15 @@ hmmSearch <- function(fasta,
 
   #run hmmsearch
   blout <- tempfile(pattern = 'tmpo', fileext = '.tab')
-  hmmse <- paste0('hmmsearch -o /dev/null --noali',
-                   paste0(' --', oty, ' '),
-                   blout,
-                   paste0(' --cpu ', n_threads),
-                   ' ',
-                   hmm,
-                   ' ',
-                   fasta)
+  hmmse <- paste0('hmmsearch -o /dev/null --noali -E',
+                  eval,
+                  paste0(' --', oty, ' '),
+                  blout,
+                  paste0(' --cpu ', n_threads),
+                  ' ',
+                  hmm,
+                  ' ',
+                  fasta)
 
   system(hmmse)
 

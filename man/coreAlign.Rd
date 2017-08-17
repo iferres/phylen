@@ -4,14 +4,23 @@
 \alias{coreAlign}
 \title{Compute Core Genome Alignment}
 \usage{
-coreAlign(gffs = character(), hmmTarGz = character(),
+coreAlign(gffs = character(), hmmFile = character(), isCompressed = TRUE,
   outfile = "coregenome.aln", level = 1, n_threads = 1L)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
 
-\item{hmmTarGz}{A \code{character} string with the path to the \code{.hmm.tar.gz}
-file downloaded from EggNOG database website.}
+\item{hmmFile}{The path to the \code{.hmm.tar.gz} file downloaded from
+EggNOG website, or the already prepared \code{hmm} text file. See
+\code{isCompressed} below.}
+
+\item{isCompressed}{\code{logical()} If the \code{hmm} param points to the
+"hmm.tar.gz" file, it should be set to \code{TRUE}. If the pipeline has been
+already ran, the \code{hmm} parameter should point to the ".hmm" file that
+was generated before, and the \code{isCompressed} param should be set to
+\code{FALSE}. If the pipeline was ran before, the function will also check
+for index files and will produce them if any of the required is missing. See
+"hmmpress" from HMMER 3.1b2 manual.}
 
 \item{outfile}{A \code{character} string with the coregenome alignment file
 name. (Default: coregenome.aln).}

@@ -26,39 +26,64 @@ untargz <- function(targzfile, exdir){
 #' @title Prepare Compressed Hmm Files To Hmmsearch
 #' @description Decompress, concatenate and press (\code{hmmpress}) hmm files
 #' to allow \code{hmmsearch} to run.
-#' @param hmmTarGz The path to the \code{.hmm.tar.gz} file downloaded from
-#' EggNOG website.
+#' @param hmm The path to the \code{.hmm.tar.gz} file downloaded from
+#' EggNOG website, or the already prepared \code{hmm} text file.
+#' @param isCompressed \code{logical()} If the \code{hmm} points to the
+#' \code{hmm.tar.gz} file, it should be set to \code{TRUE}. If the pipeline has
+#' been already ran, the \code{hmm} parameter should point to the ".hmm" file
+#' that was generated.
+#' @details If the pipeline was ran before, the function will also check for
+#' index files and will produce them if any of the required is missing. See
+#' "hmmpress" from HMMER 3.1b2 manual.
 #' @return A \code{character} vector with the names of the hmm file and their
 #' indices.
 #' @author Ignacio Ferres
-setHmm <- function(hmmTarGz){
+setHmm <- function(hmm = character(),
+                   isCompressed = TRUE){
 
-  hmmTarGz <- normalizePath(hmmTarGz)
+  hmm <- normalizePath(hmm)
 
-  cat('Decompressing.. ')
-  hmms <- untargz(targzfile = hmmTarGz)
-  isdir <- which(file.info(hmms)$isdir)
-  if (length(isdir)>0){
-    fils <- hmms[-isdir]
+  if (isCompressed){
+
+    cat('Decompressing.. ')
+    hmms <- untargz(targzfile = hmm)
+    isdir <- which(file.info(hmms)$isdir)
+    cat('DONE!\n')
+
+    cat('Concatenating.. ')
+    nam <- sub('.tar.gz', '', rev(strsplit(hmm, '/')[[1]])[1], fixed = T)
+    hmm <- paste0(dirname(hmm), '/', nam)
+    cate <- paste0('cat ',
+                   # paste(fils, collapse = '; '),
+                   hmms[isdir],
+                   '* > ',
+                   hmm)
+    system(cate)
+    unlink(hmms, recursive = TRUE)
+    cat('DONE!\n')
+
+    cat('Pressing.. ')
+    hmm <- hmmPress(model = hmm)
+    cat('DONE!\n')
+
   }else{
-    fils <- hmms
+
+    pressfiles <- paste0(hmm , c('','.h3f', '.h3i', '.h3m', '.h3p'))
+    if (!all(file.exists(pressfiles))){
+
+      cat('Pressing.. ')
+      hmm <- hmmPress(model = hmm)
+      cat('DONE!\n')
+
+    }else{
+
+      hmm <- pressfiles
+
+    }
+
   }
-  cat('DONE!\n')
 
-  cat('Concatenating.. ')
-  nam <- sub('.tar.gz', '', rev(strsplit(hmmTarGz, '/')[[1]])[1], fixed = T)
-  hmm <- paste0(dirname(hmmTarGz), '/', nam)
-  cate <- paste0('cat ',
-                 paste(fils, collapse = ' '),
-                 ' > ',
-                 hmm)
-  system(cate)
-  unlink(hmms, recursive = TRUE)
-  cat('DONE!\n')
 
-  cat('Pressing.. ')
-  hmm <- hmmPress(model = hmm)
-  cat('DONE!\n')
 
   return(hmm)
 }
