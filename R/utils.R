@@ -87,3 +87,19 @@ setHmm <- function(hmm = character(),
 
   return(hmm)
 }
+
+
+#' @name getIdsFromStats
+#' @title Get Pfam Ids From Hmmstats output
+#' @description Get Pfam-A Ids from \code{hmmstat} output.
+#' @param stats The path to the file where the stats were written.
+#' @return A \code{character} vector with the Pfam ids.
+getIdsFromStats <- function(stats){
+  rl <- readLines(stats)
+  rl <- rl[which(!grepl("^\\#",rl))]
+  rl <- gsub("[ ]+"," ",rl)
+  lst <- strsplit(rl[-1]," ")
+
+  ids <- sapply(lst, function(x){x[2]})
+  return(ids)
+}

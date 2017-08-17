@@ -1,3 +1,14 @@
+#' @name hmmStat
+#' @title Compute Hmm Stats
+#' @description Compute hmm stats.
+#' @param hmmfile \code{character} The path to the hmm file.
+#' @return The file name of the temporary file where stats were written.
+hmmStat <- function(hmmfile){
+  tmp <- tempfile()
+  hmmstat <- paste0('hmmstat ', hmmfile, ' > ', tmp)
+  system(hmmstat)
+  return(tmp)
+}
 
 #' @name hmmPress
 #' @title hmmPress

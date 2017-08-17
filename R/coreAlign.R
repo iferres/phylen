@@ -26,7 +26,7 @@ coreAlign <- function(gffs = character(),
                       hmmFile = character(),
                       isCompressed = TRUE,
                       outfile = 'coregenome.aln',
-                      level = 1,
+                      level,
                       n_threads = 1L){
 
   #Err
@@ -34,7 +34,14 @@ coreAlign <- function(gffs = character(),
   #Decompress hmm.tar.gz, concatenate models, hmmpress
   hmm <- setHmm(hmm = hmmFile, isCompressed)
 
+  cat('Getting information from hmms.. ')
+  stats <- hmmStat(hmm[1])
+  lev <- getIdsFromStats(stats)
+  cat('DONE!\n')
+
+
   #Extract aa seqs from gffs
+  cat('Searching.. ')
   hits <- mclapply(gffs, function(x){
 
     tmp <- tempdir()
@@ -42,7 +49,9 @@ coreAlign <- function(gffs = character(),
     aas <- paste0(tmp,'/', sub('gff$','faa',rev(strsplit(x,'/')[[1]])[1]))
 
     blout <- hmmSearch(aas, hmm = hmm[1], n_threads = 0)
+    file.remove(aas)
     m <- readDomtblout(domtblout = blout)
+    file.remove(blout)
     m <- m[-which(m$Evalue>=1e-10),]
     sp <- split(m, m$Query)
     assig <-lapply(sp, function(y){
@@ -50,16 +59,36 @@ coreAlign <- function(gffs = character(),
       hi <- do.call(rbind,lapply(sp2, function(z){sum(z$Score / sum(z$End-z$Start))}))
       rownames(hi)[which.max(hi[,1])]
     })
-    out <- do.call(c, assig)
-    out
+    vs <- do.call(c, assig)
+    vs
 
   }, mc.cores = n_threads, mc.preschedule = FALSE)
-
-
+  cat('DONE!\n')
 
   #Merge
+  cat('Computing panmatrix.. ')
+  pm <- lapply(hits, function(x){ table(factor(x, levels = lev)) })
+  ntb <- unlist(lapply(hits, function(x){ strsplit(names(x[1]), ';')[[1]][1] }))
+  names(pm) <- ntb
+  pm <- do.call(rbind, pm)
+  pm <- pm[, -which(colSums(pm)==0)]
+  pm[which(pm>1)] <- 1L
+  cat('DONE!\n')
 
-  #Process
+  #Identify core-genes
+  if (missing(level)){
+    sq <- seq(1, 0.85, -0.01)
+    ev <- sapply(sq, function(x){
+      length(which(colSums(pm) >= (nrow(pm)*x)))
+      })
+    plot(cbind(sq*100, ev),
+         ylab = 'Number of core-genes',
+         xlab = 'Percentage of genomes a gene must be in to be core',
+         main = 'Choose:',
+         xlim = rev(range(sq*100)),
+         las=1)
+    level <- as.integer(readline(prompt = 'Choose a percentage:'))
+  }
 
   #Extract cds from gffs
 
