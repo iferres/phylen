@@ -43,8 +43,15 @@ coreAlign <- function(gffs = character(),
 
     blout <- hmmSearch(aas, hmm = hmm[1], n_threads = 0)
     m <- readDomtblout(domtblout = blout)
-
-
+    m <- m[-which(m$Evalue>=1e-10),]
+    sp <- split(m, m$Query)
+    assig <-lapply(sp, function(y){
+      sp2 <- split(y, y$Hit)
+      hi <- do.call(rbind,lapply(sp2, function(z){sum(z$Score / sum(z$End-z$Start))}))
+      rownames(hi)[which.max(hi[,1])]
+    })
+    out <- do.call(c, assig)
+    out
 
   }, mc.cores = n_threads, mc.preschedule = FALSE)
 
