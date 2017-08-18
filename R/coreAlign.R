@@ -13,6 +13,7 @@
 #' \code{FALSE}. If the pipeline was ran before, the function will also check
 #' for index files and will produce them if any of the required is missing. See
 #' "hmmpress" from HMMER 3.1b2 manual.
+#' @param eval Consider hits with and evalue less than \code{eval}.
 #' @param outfile A \code{character} string with the coregenome alignment file
 #' name. (Default: coregenome.aln).
 #' @param mafftMode Alignment accuracy. One of "mafft", "ginsi", "linsi" or
@@ -37,6 +38,7 @@
 coreAlign <- function(gffs = character(),
                       hmmFile = character(),
                       isCompressed = TRUE,
+                      eval = 1e-30,
                       outfile = 'coregenome.aln',
                       mafftMode = 'linsi',
                       ogsDirNam,
@@ -70,7 +72,7 @@ coreAlign <- function(gffs = character(),
     file.remove(aas)
     m <- readDomtblout(domtblout = blout)
     file.remove(blout)
-    m <- m[-which(m$Evalue>=1e-10),]
+    m <- m[-which(m$Evalue>=eval),]
     sp <- split(m, m$Query)
     assig <-lapply(sp, function(y){
       sp2 <- split(y, y$Hit)

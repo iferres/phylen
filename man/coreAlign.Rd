@@ -5,8 +5,8 @@
 \title{Compute Core Genome Alignment}
 \usage{
 coreAlign(gffs = character(), hmmFile = character(), isCompressed = TRUE,
-  outfile = "coregenome.aln", mafftMode = "linsi", ogsDirNam,
-  keepOgs = FALSE, level, n_threads = 1L)
+  eval = 1e-30, outfile = "coregenome.aln", mafftMode = "linsi",
+  ogsDirNam, keepOgs = FALSE, level, n_threads = 1L)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
@@ -22,6 +22,8 @@ was generated before, and the \code{isCompressed} param should be set to
 \code{FALSE}. If the pipeline was ran before, the function will also check
 for index files and will produce them if any of the required is missing. See
 "hmmpress" from HMMER 3.1b2 manual.}
+
+\item{eval}{Consider hits with and evalue less than \code{eval}.}
 
 \item{outfile}{A \code{character} string with the coregenome alignment file
 name. (Default: coregenome.aln).}
