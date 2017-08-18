@@ -5,8 +5,8 @@
 \title{Compute Core Genome Alignment}
 \usage{
 coreAlign(gffs = character(), hmmFile = character(), isCompressed = TRUE,
-  outfile = "./coregenome.aln", aligner = "mafft", aliParam = list(),
-  ogsDirNam, keepOgs = FALSE, level, n_threads = 1L)
+  outfile = "coregenome.aln", mafftMode = "linsi", ogsDirNam,
+  keepOgs = FALSE, level, n_threads = 1L)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
@@ -26,10 +26,11 @@ for index files and will produce them if any of the required is missing. See
 \item{outfile}{A \code{character} string with the coregenome alignment file
 name. (Default: coregenome.aln).}
 
-\item{aligner}{The aligner to use. Currenly only \code{"mafft"} is
-implemented.}
-
-\item{aliParam}{\code{list()} of parameters to pass to \code{aligner}.}
+\item{mafftMode}{Alignment accuracy. One of "mafft", "ginsi", "linsi" or
+"einsi". The first one is the default MAFFT mode, very fast. The second uses
+mafft options "--maxiterate 1000 --globalpair". The third uses "--maxiterate
+1000 --localpair" (phylen DEFAULT). The fourth uses "--ep 0 --maxiterate
+1000 --genafpair". See MAFFT manual for more details.}
 
 \item{ogsDirNam}{\code{character()} The directory name where to put
 intermediate files. If not provided or already exists, it will be

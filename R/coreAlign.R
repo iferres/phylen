@@ -143,31 +143,50 @@ coreAlign <- function(gffs = character(),
     ofi
   })
   gfi <- unlist(gfi)
+  rm(ges)
   cat('DONE!\n')
 
   #Align
+  cat('Aligning.. ')
   afi <- mclapply(gfi, function(x){
     mafft(infile = x, mode = mafftMode)
   }, mc.cores = n_threads, mc.preschedule = FALSE)
   afi <- unlist(afi)
+  cat('DONE!')
 
   #Creates supergene
-
+  cat('Concatenating.. ')
+  #Concatenates Horizontal
   ch <- catHoriz(rn = rownames(pm),
                  ogsDirNam = ogsDirNam,
                  afi = afi,
                  extension = '_supergene.fasta',
                  n_threads = n_threads)
 
+
   #Concatenates vertical
   cv <- catVert(wd = wd,
                 outfile = outfile,
                 sos = ch)
+  file.remove(ch)
+  cat('DONE!\n')
 
+  if (!keepOgs){
+    cat('Removing intermediate files.. ')
+    unlink(ogsDirNam, recursive = TRUE)
+    cat('DONE!\n')
+  }
 
   #Trim?
 
   #Out
+  fin <- paste0('Finished: ',
+                ncol(pm),
+                ' groups of orthologous from ',
+                nrow(pm),
+                ' isolates have been used in the alignment.\n')
+  cat(fin)
+  return(cv)
 
 }
 

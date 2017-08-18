@@ -137,7 +137,19 @@ mafft <- function(infile,
   return(outfile)
 }
 
-
+#' @name catHoriz
+#' @title Concatenate The Coregenes
+#' @description Concatenate the core genes and produce one file per genome with
+#' the supergene in fasta format.
+#' @param rn The isolates names.
+#' @param ogsDirNam Where to put the files.
+#' @param afi A \code{character()} vector with the paths to the orthologous
+#' alignments.
+#' @param extension An extension.
+#' @param n_threads The number of cpus to use.
+#' @return The alignment files and the names of those files in the R stout.
+#' @author Ignacio Ferres
+#' @importFrom parallel mclapply
 catHoriz <- function(rn,
                      ogsDirNam,
                      afi,
@@ -145,7 +157,6 @@ catHoriz <- function(rn,
                      n_threads = 1L){
 
   #Creates supergenes files with fasta headers
-  rn <- rownames(pm)
   sos <- NULL
   for (i in seq_along(rn)){
     he <- paste0('>', rn[i])
@@ -182,15 +193,22 @@ catHoriz <- function(rn,
   return(sos)
 }
 
-
+#' @name catVert
+#' @title Concatenate All Supergenes In A Single Fasta File
+#' @description Concatenate all supergenes in a single fasta file.
+#' @param wd The directory.
+#' @param outfile The name of the final alignment.
+#' @param sos A \code{character()} vector with the file names of the supergenes
+#' fasta files.
+#' @return A fasta file and the nameo of it in the R stdout.
+#' @author Ignacio Ferres
 catVert <- function(wd, outfile, sos){
   sfi <- paste0(wd, outfile)
   for (i in seq_along(sos)){
-    rl <- readLines(sos[i])
+    rl <- readLines(sos[i], warn = FALSE)
     cat(rl, file = sfi, sep = '\n', append = TRUE)
   }
-  cat('phylen says: Ignore those ^ warnings.\n')
-  file.remove(sos)
+
   sfi
 }
 
