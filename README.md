@@ -8,13 +8,18 @@ To work, it is required to have installed on your $PATH variable the following s
 ### Other external dependencies
 
  * A [EggNOG](http://eggnogdb.embl.de/#/app/downloads) hmm database file. Its not required to decompress (`untar`) those files before running the pipeline.
+ 
+## Installation
+```
+devtools::install_github('iferres/phylen')
+```
 
 ## Usage
-`r
+```r
 coreAlign(gffs = character(), hmmFile = character(), isCompressed = TRUE,
   eval = 1e-30, outfile = "coregenome.aln", mafftMode = "linsi",
   ogsDirNam, keepOgs = FALSE, level, n_threads = 1L)
-`
+```
 ### Arguments
  * `gffs`     A `character` vector with the gff file paths.
  * `hmmFile`  The path to the `.hmm.tar.gz` file downloaded from EggNOG website, or the already prepared `.hmm` text file. See `isCompressed` below.
@@ -30,7 +35,7 @@ coreAlign(gffs = character(), hmmFile = character(), isCompressed = TRUE,
 ### Value
 A core genome alignment file.
 
-#### Description
+### Description
 Identify and align core genes, and concatenate the alignments in a single file suitable for phylogenetic analyses.
 
 ## Note:
