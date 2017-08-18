@@ -15,9 +15,11 @@
 #' "hmmpress" from HMMER 3.1b2 manual.
 #' @param outfile A \code{character} string with the coregenome alignment file
 #' name. (Default: coregenome.aln).
-#' @param aligner The aligner to use. Currenly only \code{"mafft"} is
-#' implemented.
-#' @param aliParam \code{list()} of parameters to pass to \code{aligner}.
+#' @param mafftMode Alignment accuracy. One of "mafft", "ginsi", "linsi" or
+#' "einsi". The first one is the default MAFFT mode, very fast. The second uses
+#' mafft options "--maxiterate 1000 --globalpair". The third uses "--maxiterate
+#' 1000 --localpair" (phylen DEFAULT). The fourth uses "--ep 0 --maxiterate
+#' 1000 --genafpair". See MAFFT manual for more details.
 #' @param ogsDirNam \code{character()} The directory name where to put
 #' intermediate files. If not provided or already exists, it will be
 #' automatically generated. This directory is removed at the end of the
@@ -34,15 +36,16 @@
 coreAlign <- function(gffs = character(),
                       hmmFile = character(),
                       isCompressed = TRUE,
-                      outfile = './coregenome.aln',
-                      aligner = 'mafft',
-                      aliParam = list(),
+                      outfile = 'coregenome.aln',
+                      mafftMode = 'linsi',
                       ogsDirNam,
                       keepOgs = FALSE,
                       level,
                       n_threads = 1L){
 
   #Err
+
+  #wd
   wd <- paste0(normalizePath(dirname(outfile)), '/')
 
   #Decompress hmm.tar.gz, concatenate models, hmmpress
@@ -132,16 +135,35 @@ coreAlign <- function(gffs = character(),
     ogsDirNam <- paste0(wd, 'phylen_', now, '/')
     dir.create(ogsDirNam)
   }
-  lapply(names(ges), function(x){
+  gfi <- lapply(names(ges), function(x){
+    ofi <- paste0(ogsDirNam, x,'.fasta')
     write.fasta(ffns[ges[[x]]],
                 names = ges[[x]],
-                file.out = paste0(ogsDirNam, x,'.fasta'))
+                file.out = ofi)
+    ofi
   })
+  gfi <- unlist(gfi)
   cat('DONE!\n')
 
   #Align
+  afi <- mclapply(gfi, function(x){
+    mafft(infile = x, mode = mafftMode)
+  }, mc.cores = n_threads, mc.preschedule = FALSE)
+  afi <- unlist(afi)
 
   #Creates supergene
+
+  ch <- catHoriz(rn = rownames(pm),
+                 ogsDirNam = ogsDirNam,
+                 afi = afi,
+                 extension = '_supergene.fasta',
+                 n_threads = n_threads)
+
+  #Concatenates vertical
+  cv <- catVert(wd = wd,
+                outfile = outfile,
+                sos = ch)
+
 
   #Trim?
 

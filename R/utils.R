@@ -138,3 +138,62 @@ mafft <- function(infile,
 }
 
 
+catHoriz <- function(rn,
+                     ogsDirNam,
+                     afi,
+                     extension = '_supergene.fasta',
+                     n_threads = 1L){
+
+  #Creates supergenes files with fasta headers
+  rn <- rownames(pm)
+  sos <- NULL
+  for (i in seq_along(rn)){
+    he <- paste0('>', rn[i])
+    arc <- paste0(ogsDirNam, rn[i], extension)
+    sos[i] <- arc
+    cat(he, file = arc, sep = '\n')
+  }
+
+  #Concatenates horizontal (all coregenes from a)
+  mclapply(seq_along(rn), function(i){
+    seq <- NULL
+    sav <- sos[i]
+    for (x in seq_along(afi)){
+      rl <- readLines(afi[x])
+      pr <- grep(paste0('>', rn[i], ';'), rl, fixed = TRUE)
+      gp <- grep('>', rl, fixed = TRUE)
+      if(length(pr)!=0){
+        fin <- gp[which(gp==pr)+1]-1
+        if (is.na(fin)){
+          fin <- length(rl)
+        }
+        seq[x] <- as.vector(paste(rl[pr:fin][-1], collapse = ''))
+      }else{
+        nch <- nchar(paste0(rl[(gp[1]+1):(gp[2]-1)], collapse = ''))
+        seq[x] <- paste0(rep('-', nch), collapse = '')
+      }
+    }
+
+    seq <- paste(seq, sep = '', collapse = '')
+    cat(seq, file = sav, sep = '', append = TRUE)
+    sos
+  }, mc.cores = n_threads)
+
+  return(sos)
+}
+
+
+catVert <- function(wd, outfile, sos){
+  sfi <- paste0(wd, outfile)
+  for (i in seq_along(sos)){
+    rl <- readLines(sos[i])
+    cat(rl, file = sfi, sep = '\n', append = TRUE)
+  }
+  cat('phylen says: Ignore those ^ warnings.\n')
+  file.remove(sos)
+  sfi
+}
+
+
+
+
