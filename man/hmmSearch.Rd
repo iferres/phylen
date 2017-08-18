@@ -11,6 +11,8 @@ hmmSearch(fasta, hmm, eval = "1e-10", oty = "domtblout", n_threads = 1L)
 
 \item{hmm}{A hmm file. Must be pressed (see hmmpress from HMMER manual).}
 
+\item{eval}{evalue threshold.}
+
 \item{oty}{The \code{hmmsearch} output type.}
 
 \item{n_threads}{An \code{integer}. The number of cores to use.}

@@ -29,8 +29,9 @@
 #' @param level \code{numeric}
 #' @param n_threads \code{integer} The number of cpus to use.
 #' @return A core genome alignment file.
-#' @importFrom parallel mclapply splitIndices
+#' @importFrom parallel mclapply
 #' @importFrom seqinr write.fasta
+#' @importFrom graphics plot
 #' @export
 #' @author Ignacio Ferres
 coreAlign <- function(gffs = character(),

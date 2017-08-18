@@ -28,6 +28,7 @@ hmmPress <- function(model){
 #' performs a search of the former over the latter.
 #' @param fasta A protein fasta file.
 #' @param hmm A hmm file. Must be pressed (see hmmpress from HMMER manual).
+#' @param eval evalue threshold.
 #' @param oty The \code{hmmsearch} output type.
 #' @param n_threads An \code{integer}. The number of cores to use.
 #' @return The path to a temporary file where the hmmsearch output is placed.
