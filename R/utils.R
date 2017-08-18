@@ -103,3 +103,38 @@ getIdsFromStats <- function(stats){
   ids <- sapply(lst, function(x){x[2]})
   return(ids)
 }
+
+#' @name mafft
+#' @title Align with MAFFT aligner
+#' @description A wrapper function to run MAFFT.
+#' @param infile \code{character()} The path to the infile.
+#' @param outfile \code{character()} The outfile name. If missing, the
+#' extension is changed to '.ali'.
+#' @param n_threads \code{integer()} The number of cpus to use.
+#' @param type One of "nuc" or "amino".
+#' @param mode Accuracy. One of "mafft", "ginsi", "linsi" or "einsi". The first
+#' one is the default MAFFT mode, very fast. The second uses mafft options
+#' "--maxiterate 1000 --globalpair". The third uses "--maxiterate 1000
+#' --localpair" (DEFAULT). The fourth uses "--ep 0 --maxiterate 1000
+#' --genafpair". See MAFFT manual for more details.
+#' @return The alignment file and the name of the outfile in the R console.
+mafft <- function(infile,
+                  outfile,
+                  n_threads = 1L,
+                  type = 'nuc',
+                  mode = 'linsi'){
+
+  mode <- match.arg(mode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
+  type <- paste0('--', match.arg(type, choices = c('nuc', 'amino')))
+
+  if(missing(outfile)){
+    outfile <- sub('[.]\\w+$', '.ali', infile)
+  }
+
+  run <-paste(mode,'--quiet --thread',n_threads,type,infile,'>',outfile)
+  system(run)
+
+  return(outfile)
+}
+
+

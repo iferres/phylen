@@ -5,7 +5,8 @@
 \title{Compute Core Genome Alignment}
 \usage{
 coreAlign(gffs = character(), hmmFile = character(), isCompressed = TRUE,
-  outfile = "coregenome.aln", level = 1, n_threads = 1L)
+  outfile = "./coregenome.aln", aligner = "mafft", aliParam = list(),
+  ogsDirNam, keepOgs = FALSE, level, n_threads = 1L)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
@@ -24,6 +25,19 @@ for index files and will produce them if any of the required is missing. See
 
 \item{outfile}{A \code{character} string with the coregenome alignment file
 name. (Default: coregenome.aln).}
+
+\item{aligner}{The aligner to use. Currenly only \code{"mafft"} is
+implemented.}
+
+\item{aliParam}{\code{list()} of parameters to pass to \code{aligner}.}
+
+\item{ogsDirNam}{\code{character()} The directory name where to put
+intermediate files. If not provided or already exists, it will be
+automatically generated. This directory is removed at the end of the
+pipeline, unless \code{keepOgs = TRUE} (see below).}
+
+\item{keepOgs}{\code{logical()} If want to keep an intermediate directory
+fasta files containing the orthologous groups (DEFAULT: \code{FALSE}).}
 
 \item{level}{\code{numeric}}
 
