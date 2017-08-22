@@ -183,7 +183,7 @@ coreAlign <- function(gffs = character(),
 
   #Out
   fin <- paste0('Finished: ',
-                ncol(pm),
+                length(ge),
                 ' groups of orthologous from ',
                 nrow(pm),
                 ' isolates have been used in the alignment.\n')
