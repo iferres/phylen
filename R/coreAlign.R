@@ -92,7 +92,7 @@ coreAlign <- function(gffs = character(),
   #Merge
   cat('Computing panmatrix.. ')
   pm <- lapply(hits, function(x){ table(factor(names(x), levels = lev)) })
-  ntb <- unlist(lapply(hits, function(x){ strsplit(names(x[1]), ';')[[1]][1] }))
+  ntb <- unlist(lapply(hits, function(x){ strsplit(x[1], ';')[[1]][1] }))
   names(pm) <- ntb
   pm <- do.call(rbind, pm)
   pm <- pm[, -which(colSums(pm)==0)]
