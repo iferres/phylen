@@ -168,8 +168,7 @@ coreAlign <- function(gffs = character(),
 
 
   #Concatenates vertical
-  cv <- catVert(wd = wd,
-                outfile = outfile,
+  cv <- catVert(outfile = outfile,
                 sos = ch)
   file.remove(ch)
   cat('DONE!\n')

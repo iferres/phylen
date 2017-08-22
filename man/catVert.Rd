@@ -4,11 +4,9 @@
 \alias{catVert}
 \title{Concatenate All Supergenes In A Single Fasta File}
 \usage{
-catVert(wd, outfile, sos)
+catVert(outfile, sos)
 }
 \arguments{
-\item{wd}{The directory.}
-
 \item{outfile}{The name of the final alignment.}
 
 \item{sos}{A \code{character()} vector with the file names of the supergenes

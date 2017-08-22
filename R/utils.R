@@ -196,20 +196,19 @@ catHoriz <- function(rn,
 #' @name catVert
 #' @title Concatenate All Supergenes In A Single Fasta File
 #' @description Concatenate all supergenes in a single fasta file.
-#' @param wd The directory.
 #' @param outfile The name of the final alignment.
 #' @param sos A \code{character()} vector with the file names of the supergenes
 #' fasta files.
 #' @return A fasta file and the nameo of it in the R stdout.
 #' @author Ignacio Ferres
-catVert <- function(wd, outfile, sos){
-  sfi <- paste0(wd, outfile)
+catVert <- function(outfile, sos){
+
   for (i in seq_along(sos)){
     rl <- readLines(sos[i], warn = FALSE)
-    cat(rl, file = sfi, sep = '\n', append = TRUE)
+    cat(rl, file = outfile, sep = '\n', append = TRUE)
   }
 
-  sfi
+  outfile
 }
 
 
