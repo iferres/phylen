@@ -47,6 +47,19 @@ coreAlign <- function(gffs = character(),
                       n_threads = 1L){
 
   #Err
+  if (any(!file.exists(gffs))){
+    stop("One or more gff files doesn't exists.")
+  }
+
+  if(length(gffs)>2){
+    stop('At least 2 gff files must be provided.')
+  }
+
+  if(!file.exists(hmmFile)){
+    stop("The hmm file doesn't exists in the specified path.")
+  }
+
+  mafftMode <- match.arg(mode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
 
   #wd
   wd <- paste0(normalizePath(dirname(outfile)), '/')
