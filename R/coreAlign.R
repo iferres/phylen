@@ -155,7 +155,7 @@ coreAlign <- function(gffs = character(),
     mafft(infile = x, mode = mafftMode)
   }, mc.cores = n_threads, mc.preschedule = FALSE)
   afi <- unlist(afi)
-  cat('DONE!')
+  cat('DONE!\n')
 
   #Creates supergene
   cat('Concatenating.. ')
