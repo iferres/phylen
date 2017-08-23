@@ -120,7 +120,7 @@ coreAlign <- function(gffs = character(),
     plot(cbind(sq*100, ev),
          ylab = 'Number of core-genes',
          xlab = 'Percentage of genomes a gene must be in to be core',
-         main = 'Choose:',
+         main = 'Choose: ',
          xlim = rev(range(sq*100)),
          las=1)
     level <- as.integer(readline(prompt = 'Choose a percentage:'))
