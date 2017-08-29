@@ -51,7 +51,7 @@ coreAlign <- function(gffs = character(),
     stop("One or more gff files doesn't exists.")
   }
 
-  if(length(gffs)>2){
+  if(length(gffs)<2){
     stop('At least 2 gff files must be provided.')
   }
 
