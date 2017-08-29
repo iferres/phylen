@@ -203,6 +203,11 @@ catHoriz <- function(rn,
 #' @author Ignacio Ferres
 catVert <- function(outfile, sos){
 
+  if(file.exists(outfile)){
+    warning('Outfile already exists. Overwriting.', immediate. = TRUE)
+    file.remove(outfile)
+  }
+
   for (i in seq_along(sos)){
     rl <- readLines(sos[i], warn = FALSE)
     cat(rl, file = outfile, sep = '\n', append = TRUE)

@@ -59,6 +59,10 @@ coreAlign <- function(gffs = character(),
     stop("The hmm file doesn't exists in the specified path.")
   }
 
+  if(file.exists(outfile)){
+    stop("The 'outfile' already exists.")
+  }
+
   mafftMode <- match.arg(mode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
 
   #wd
