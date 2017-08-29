@@ -63,7 +63,7 @@ coreAlign <- function(gffs = character(),
     stop("The 'outfile' already exists.")
   }
 
-  mafftMode <- match.arg(mode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
+  mafftMode <- match.arg(mafftMode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
 
   #wd
   wd <- paste0(normalizePath(dirname(outfile)), '/')
