@@ -50,7 +50,7 @@ setHmm <- function(hmm = character(),
     isdir <- which(file.info(hmms)$isdir)
     cat('DONE!\n')
 
-    cat('Concatenating.. ')
+    cat('Concatenating.. \n')
     nam <- sub('.tar.gz', '', rev(strsplit(hmm, '/')[[1]])[1], fixed = T)
     hmm <- paste0(dirname(hmm), '/', nam)
     hmmf <- list.files(path = hmms[isdir], pattern = 'hmm$', full.names = TRUE)
