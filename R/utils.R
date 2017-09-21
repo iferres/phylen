@@ -60,7 +60,7 @@ setHmm <- function(hmm = character(),
     #                '* > ',
     #                hmm)
     # system(cate)
-    pb <- txtProgressBar(min = 1, max = length(hmmf))
+    pb <- txtProgressBar(min = 1, max = 100)
     for (i in seq_along(hmmf)) {
       file.append(hmm, hmmf[i])
       setTxtProgressBar(pb,value = i)
