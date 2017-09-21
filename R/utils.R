@@ -53,12 +53,20 @@ setHmm <- function(hmm = character(),
     cat('Concatenating.. ')
     nam <- sub('.tar.gz', '', rev(strsplit(hmm, '/')[[1]])[1], fixed = T)
     hmm <- paste0(dirname(hmm), '/', nam)
-    cate <- paste0('cat ',
-                   # paste(fils, collapse = '; '),
-                   hmms[isdir],
-                   '* > ',
-                   hmm)
-    system(cate)
+    hmmf <- list.files(path = hmms[isdir], pattern = 'hmm$', full.names = TRUE)
+    # cate <- paste0('cat ',
+    #                # paste(fils, collapse = '; '),
+    #                hmms[isdir],
+    #                '* > ',
+    #                hmm)
+    # system(cate)
+    pb <- txtProgressBar(min = 1, max = length(hmmf))
+    for (i in seq_along(hmmf)) {
+      file.append(hmm, hmmf[i])
+      setTxtProgressBar(pb,value = i)
+      }
+    close(pb)
+
     unlink(hmms, recursive = TRUE)
     cat('DONE!\n')
 
