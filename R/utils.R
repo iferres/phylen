@@ -37,6 +37,7 @@ untargz <- function(targzfile, exdir){
 #' "hmmpress" from HMMER 3.1b2 manual.
 #' @return A \code{character} vector with the names of the hmm file and their
 #' indices.
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @author Ignacio Ferres
 setHmm <- function(hmm = character(),
                    isCompressed = TRUE){

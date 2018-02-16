@@ -7,7 +7,9 @@ Maintainer: <iferres@pasteur.edu.uy>
 Imports:
    parallel,
    seqinr,
-   graphics
+   graphics,
+   httr,
+   XML
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
