@@ -1,11 +1,13 @@
-#' @name coreAlign
-#' @title Compute Core Genome Alignment
-#' @description Identify and align core genes, and concatenate the alignments
-#' in a single file suitable for phylogenetic analyses.
+#' @name phylen
+#' @title Compute Core Genome Alignment And Phylogeny
+#' @description Identify and align core genes, concatenate the alignments
+#' in a single file, and use it to compute a phylogeny.
 #' @param gffs A \code{character} vector with the gff file paths.
 #' @param hmmFile The path to the \code{.hmm.tar.gz} file downloaded from
-#' EggNOG website, or the already prepared \code{hmm} text file. See
-#' \code{isCompressed} below.
+#' EggNOG website or using \link{list_eggnogdb} and \link{download_nog_hmm}
+#' functions on this package. The already prepared \code{hmm} text file can
+#' also be provided (see \code{isCompressed} below). Alternatively a custom set
+#' of hmm files can be passed as a concatenated single file.
 #' @param isCompressed \code{logical()} If the \code{hmm} param points to the
 #' "hmm.tar.gz" file, it should be set to \code{TRUE}. If the pipeline has been
 #' already ran, the \code{hmm} parameter should point to the ".hmm" file that
@@ -14,8 +16,9 @@
 #' for index files and will produce them if any of the required is missing. See
 #' "hmmpress" from HMMER 3.1b2 manual.
 #' @param eval Consider hits with and evalue less than \code{eval}.
-#' @param outfile A \code{character} string with the coregenome alignment file
+#' @param outAli A \code{character} string with the coregenome alignment file
 #' name. (Default: coregenome.aln).
+#' @param outTree
 #' @param mafftMode Alignment accuracy. One of "mafft", "ginsi", "linsi" or
 #' "einsi". The first one is the default MAFFT mode, very fast. The second uses
 #' mafft options "--maxiterate 1000 --globalpair". The third uses "--maxiterate
@@ -33,18 +36,34 @@
 #' @importFrom parallel mclapply
 #' @importFrom seqinr write.fasta
 #' @importFrom graphics plot
-#' @export
 #' @author Ignacio Ferres
-coreAlign <- function(gffs = character(),
-                      hmmFile = character(),
-                      isCompressed = TRUE,
-                      eval = 1e-30,
-                      outfile = 'coregenome.aln',
-                      mafftMode = 'linsi',
-                      ogsDirNam,
-                      keepOgs = FALSE,
-                      level,
-                      n_threads = 1L){
+#' @references Paradis E., Claude J. & Strimmer K. 2004. APE: analyses of phylogenetics and
+#' evolution in R language. Bioinformatics 20: 289-290.
+#'
+#' Schliep K.P. 2011. phangorn: phylogenetic analysis in R. Bioinformatics, 27(4)
+#' 592-593.
+#'
+#' Katoh K, Standley DM. MAFFT Multiple Sequence Alignment Software Version 7: Improvements
+#' in Performance and Usability. Molecular Biology and Evolution. 2013;30(4):772-780.
+#' doi:10.1093/molbev/mst010.
+#'
+#' Jensen LJ, Julien P, Kuhn M, et al. eggNOG: automated construction and annotation of
+#' orthologous groups of genes. Nucleic Acids Research. 2008;
+#' 36(Database issue):D250-D254. doi:10.1093/nar/gkm796.
+#'
+#'  S. R. Eddy. Accelerated profile HMM searches. PLoS Comp. Biol., 7:e1002195, 2011.
+#' @export
+
+phylen <- function(gffs = character(),
+                   hmmFile = character(),
+                   isCompressed = TRUE,
+                   eval = 1e-30,
+                   outAli = 'coregenome.aln',
+                   mafftMode = 'linsi',
+                   ogsDirNam,
+                   keepOgs = FALSE,
+                   level,
+                   n_threads = 1L){
 
   #Err
   if (any(!file.exists(gffs))){
@@ -59,14 +78,14 @@ coreAlign <- function(gffs = character(),
     stop("The hmm file doesn't exists in the specified path.")
   }
 
-  if(file.exists(outfile)){
-    stop("The 'outfile' already exists.")
+  if(file.exists(outAli)){
+    stop("The 'outAli' already exists.")
   }
 
   mafftMode <- match.arg(mafftMode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
 
   #wd
-  wd <- paste0(normalizePath(dirname(outfile)), '/')
+  wd <- paste0(normalizePath(dirname(outAli)), '/')
 
   #Decompress hmm.tar.gz, concatenate models, hmmpress
   hmm <- setHmm(hmm = hmmFile, isCompressed)
@@ -185,7 +204,7 @@ coreAlign <- function(gffs = character(),
 
 
   #Concatenates vertical
-  cv <- catVert(outfile = outfile,
+  cv <- catVert(outfile = outAli,
                 sos = ch)
   file.remove(ch)
   cat('DONE!\n')
