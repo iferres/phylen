@@ -17,13 +17,13 @@
 #'
 #' Multiple cpus can be used when performing bootstrap.
 #'
-#' It uses the "GTR" model to optimize the tree, as well as stochastic
-#' rearrangements.
+#' It uses the "GTR" model to optimize the tree.
 #' @return An object of class "phylo" (phangorn and ape packages), and the
 #' specified newick files.
 #' @author Ignacio Ferres
 #' @importFrom phangorn read.phyDat dist.hamming NJ pml optim.pml bootstrap.pml plotBS
 #' @importFrom ape write.tree
+#' @importFrom grDevices pdf dev.off
 #' @references Paradis E., Claude J. & Strimmer K. 2004. APE: analyses of phylogenetics and
 #' evolution in R language. Bioinformatics 20: 289-290.
 #' Schliep K.P. 2011. phangorn: phylogenetic analysis in R. Bioinformatics, 27(4)
@@ -36,7 +36,7 @@ computePhylo <- function(ali,
                          outDir='.',
                          ...){
 
-  outDir <- normalizePath(dirname(outDir))
+  outDir <- normalizePath(outDir)
 
   mode <- match.arg(mode, c('ml','nj'))
 
@@ -49,8 +49,6 @@ computePhylo <- function(ali,
     fitNJ <- pml(nj.tree, dat, model='GTR')
     fit <- optim.pml(object = fitNJ,
                      model = 'GTR',
-                     optNni = TRUE,
-                     rearrangement = 'stochastic',
                      ...)
 
     if (nbs > 0L){
@@ -82,7 +80,7 @@ computePhylo <- function(ali,
   }else{
 
     nwk <- paste0(outDir, '/', outPrefix, '_nj.nwk')
-    write.tree(nj.tree$tree, file = nwk)
+    write.tree(nj.tree, file = nwk)
     return(nj.tree) #Class 'phylo'
 
   }

@@ -1,8 +1,11 @@
 Package: phylen
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Compute Multiple Alignment, Concatenate And Compute Phylogeny Using HMMs
 Version: 0.1.0
-Author: Ignacio Ferres
+Authors@R: c(
+    person("Ignacio", "Ferres", email = "iferres@pasteur.edu.uy", role = c("aut", "cre")),
+    person("Gregorio", "Iraola", email = "giraola@pasteur.edu.uy", role = "aut")
+    )
 Maintainer: <iferres@pasteur.edu.uy>
 Depends:
    phangorn,

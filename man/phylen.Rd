@@ -5,8 +5,9 @@
 \title{Compute Core Genome Alignment And Phylogeny}
 \usage{
 phylen(gffs = character(), hmmFile = character(), isCompressed = TRUE,
-  eval = 1e-30, outAli = "coregenome.aln", mafftMode = "linsi", ogsDirNam,
-  keepOgs = FALSE, level, n_threads = 1L)
+  eval = 1e-30, level, phyloMode = "ml", nbs = 100L, outDir = "phylen",
+  aliPfx = "coregenome", treePfx = "phylo", mafftMode = "linsi",
+  keepOgs = FALSE, n_threads = 1L)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
@@ -18,17 +19,40 @@ also be provided (see \code{isCompressed} below). Alternatively a custom set
 of hmm files can be passed as a concatenated single file.}
 
 \item{isCompressed}{\code{logical()} If the \code{hmm} param points to the
-"hmm.tar.gz" file, it should be set to \code{TRUE}. If the pipeline has been
-already ran, the \code{hmm} parameter should point to the ".hmm" file that
-was generated before, and the \code{isCompressed} param should be set to
-\code{FALSE}. If the pipeline was ran before, the function will also check
-for index files and will produce them if any of the required is missing. See
-"hmmpress" from HMMER 3.1b2 manual.}
+"hmm.tar.gz" file downloaded from EggNOG, it should be set to \code{TRUE}.
+If the pipeline has been already ran or a custom set of hmm is used, the
+\code{hmm} parameter should point to the ".hmm" file, and the
+\code{isCompressed} param should be set to \code{FALSE}. If the pipeline was
+ran before, the function will also check for index files and will produce
+them if any of the required is missing. See "hmmpress" from HMMER 3.1b2
+manual.}
 
-\item{eval}{Consider hits with and evalue less than \code{eval}.}
+\item{eval}{Consider hits with an evalue less than \code{eval}.}
 
-\item{outAli}{A \code{character} string with the coregenome alignment file
-name. (Default: coregenome.aln).}
+\item{level}{\code{numeric} The percentage of isolates a gene must be in to
+be considered part of the coregenome. If nothing is specified, a plot is
+generated at the middle of the process showing number of core genes vs a
+percentage (from 100 to 85%), and the user is asked to choose an integer
+in that range. The process wont continue until the user choose a level.}
+
+\item{phyloMode}{One of "nj" (Neighbour-joining) of "ml" (Maximum
+likelihood).}
+
+\item{nbs}{Number of bootstrap. If \code{phyloMode} is set to "nj", this
+parameter is ignored. If \code{phyloMode} is set to "ml", and nbs is set to
+0, no bootstrap is performed. If \code{phyloMode} = "ml", and \code{nbs}>0,
+then bootstrap is performed and 2 newick files are generated, one with the
+ML optimized tree (subffix "_ml.nwk"), and another with the bootstrap trees
+(subffix "_ml_\code{nbs}.nwk").}
+
+\item{outDir}{Where to put the output files. If \code{outDir} do not exists,
+then a directory with the specified name is created.}
+
+\item{aliPfx}{A \code{character} string with the coregenome alignment file
+prefix. (Default: coregenome).}
+
+\item{treePfx}{A \code{character} string with the newick trees files
+prefixes. (Default: phylo).}
 
 \item{mafftMode}{Alignment accuracy. One of "mafft", "ginsi", "linsi" or
 "einsi". The first one is the default MAFFT mode, very fast. The second uses
@@ -36,24 +60,38 @@ mafft options "--maxiterate 1000 --globalpair". The third uses "--maxiterate
 1000 --localpair" (phylen DEFAULT). The fourth uses "--ep 0 --maxiterate
 1000 --genafpair". See MAFFT manual for more details.}
 
-\item{ogsDirNam}{\code{character()} The directory name where to put
-intermediate files. If not provided or already exists, it will be
-automatically generated. This directory is removed at the end of the
-pipeline, unless \code{keepOgs = TRUE} (see below).}
-
 \item{keepOgs}{\code{logical()} If want to keep an intermediate directory
-fasta files containing the orthologous groups (DEFAULT: \code{FALSE}).}
-
-\item{level}{\code{numeric}}
+fasta files containing the orthologous groups (DEFAULT: \code{FALSE}). If
+\code{TRUE}, then a directory called "orthogroups" is kept inside the
+\code{outDir} directory.}
 
 \item{n_threads}{\code{integer} The number of cpus to use.}
 }
 \value{
-A core genome alignment file.
+A core genome alignment file, a phylogenetic tree in newick format
+(or two, see \code{nbs} parameter), and an object of class "phylo" on
+console. Optionally, a directory with the orthologous groups used for the
+alignment (see \code{keepOgs} parameter).
 }
 \description{
 Identify and align core genes, concatenate the alignments
 in a single file, and use it to compute a phylogeny.
+}
+\references{
+Paradis E., Claude J. & Strimmer K. 2004. APE: analyses of phylogenetics and
+evolution in R language. Bioinformatics 20: 289-290.
+
+Schliep K.P. 2011. phangorn: phylogenetic analysis in R. Bioinformatics, 27(4)
+592-593.
+
+Katoh K, Standley DM. 2013. MAFFT Multiple Sequence Alignment Software Version 7:
+Improvements in Performance and Usability. Molecular Biology and Evolution
+30(4):772-780.
+
+Jensen LJ, Julien P, Kuhn M, et al. eggNOG: automated construction and annotation of
+orthologous groups of genes. Nucleic Acids Research 36(Database issue):D250-D254.
+
+S. R. Eddy. 2011. Accelerated profile HMM searches. PLoS Comp. Biol. 7:e1002195.
 }
 \author{
 Ignacio Ferres

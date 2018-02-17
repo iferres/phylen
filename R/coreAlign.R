@@ -9,30 +9,48 @@
 #' also be provided (see \code{isCompressed} below). Alternatively a custom set
 #' of hmm files can be passed as a concatenated single file.
 #' @param isCompressed \code{logical()} If the \code{hmm} param points to the
-#' "hmm.tar.gz" file, it should be set to \code{TRUE}. If the pipeline has been
-#' already ran, the \code{hmm} parameter should point to the ".hmm" file that
-#' was generated before, and the \code{isCompressed} param should be set to
-#' \code{FALSE}. If the pipeline was ran before, the function will also check
-#' for index files and will produce them if any of the required is missing. See
-#' "hmmpress" from HMMER 3.1b2 manual.
-#' @param eval Consider hits with and evalue less than \code{eval}.
-#' @param outAli A \code{character} string with the coregenome alignment file
-#' name. (Default: coregenome.aln).
-#' @param outTree
+#' "hmm.tar.gz" file downloaded from EggNOG, it should be set to \code{TRUE}.
+#' If the pipeline has been already ran or a custom set of hmm is used, the
+#' \code{hmm} parameter should point to the ".hmm" file, and the
+#' \code{isCompressed} param should be set to \code{FALSE}. If the pipeline was
+#' ran before, the function will also check for index files and will produce
+#' them if any of the required is missing. See "hmmpress" from HMMER 3.1b2
+#' manual.
+#' @param eval Consider hits with an evalue less than \code{eval}.
+#' @param level \code{numeric} The percentage of isolates a gene must be in to
+#' be considered part of the coregenome. If nothing is specified, a plot is
+#' generated at the middle of the process showing number of core genes vs a
+#' percentage (from 100 to 85%), and the user is asked to choose an integer
+#' in that range. The process wont continue until the user choose a level.
+#' @param phyloMode One of "nj" (Neighbour-joining) of "ml" (Maximum
+#' likelihood).
+#' @param nbs Number of bootstrap. If \code{phyloMode} is set to "nj", this
+#' parameter is ignored. If \code{phyloMode} is set to "ml", and nbs is set to
+#' 0, no bootstrap is performed. If \code{phyloMode} = "ml", and \code{nbs}>0,
+#' then bootstrap is performed and 2 newick files are generated, one with the
+#' ML optimized tree (subffix "_ml.nwk"), and another with the bootstrap trees
+#' (subffix "_ml_\code{nbs}.nwk").
+#' @param outDir Where to put the output files. If \code{outDir} do not exists,
+#' then a directory with the specified name is created.
+#' @param aliPfx A \code{character} string with the coregenome alignment file
+#' prefix. (Default: coregenome).
+#' @param treePfx A \code{character} string with the newick trees files
+#' prefixes. (Default: phylo).
 #' @param mafftMode Alignment accuracy. One of "mafft", "ginsi", "linsi" or
 #' "einsi". The first one is the default MAFFT mode, very fast. The second uses
 #' mafft options "--maxiterate 1000 --globalpair". The third uses "--maxiterate
 #' 1000 --localpair" (phylen DEFAULT). The fourth uses "--ep 0 --maxiterate
 #' 1000 --genafpair". See MAFFT manual for more details.
-#' @param ogsDirNam \code{character()} The directory name where to put
-#' intermediate files. If not provided or already exists, it will be
-#' automatically generated. This directory is removed at the end of the
-#' pipeline, unless \code{keepOgs = TRUE} (see below).
 #' @param keepOgs \code{logical()} If want to keep an intermediate directory
-#' fasta files containing the orthologous groups (DEFAULT: \code{FALSE}).
-#' @param level \code{numeric}
+#' fasta files containing the orthologous groups (DEFAULT: \code{FALSE}). If
+#' \code{TRUE}, then a directory called "orthogroups" is kept inside the
+#' \code{outDir} directory.
 #' @param n_threads \code{integer} The number of cpus to use.
-#' @return A core genome alignment file.
+#' @return A core genome alignment file, a phylogenetic tree in newick format
+#' (or two, see \code{nbs} parameter), and an object of class "phylo" on
+#' console. Optionally, a directory with the orthologous groups used for the
+#' alignment (see \code{keepOgs} parameter).
+#' @details
 #' @importFrom parallel mclapply
 #' @importFrom seqinr write.fasta
 #' @importFrom graphics plot
@@ -43,26 +61,28 @@
 #' Schliep K.P. 2011. phangorn: phylogenetic analysis in R. Bioinformatics, 27(4)
 #' 592-593.
 #'
-#' Katoh K, Standley DM. MAFFT Multiple Sequence Alignment Software Version 7: Improvements
-#' in Performance and Usability. Molecular Biology and Evolution. 2013;30(4):772-780.
-#' doi:10.1093/molbev/mst010.
+#' Katoh K, Standley DM. 2013. MAFFT Multiple Sequence Alignment Software Version 7:
+#' Improvements in Performance and Usability. Molecular Biology and Evolution
+#' 30(4):772-780.
 #'
 #' Jensen LJ, Julien P, Kuhn M, et al. eggNOG: automated construction and annotation of
-#' orthologous groups of genes. Nucleic Acids Research. 2008;
-#' 36(Database issue):D250-D254. doi:10.1093/nar/gkm796.
+#' orthologous groups of genes. Nucleic Acids Research 36(Database issue):D250-D254.
 #'
-#'  S. R. Eddy. Accelerated profile HMM searches. PLoS Comp. Biol., 7:e1002195, 2011.
+#' S. R. Eddy. 2011. Accelerated profile HMM searches. PLoS Comp. Biol. 7:e1002195.
 #' @export
 
 phylen <- function(gffs = character(),
                    hmmFile = character(),
                    isCompressed = TRUE,
                    eval = 1e-30,
-                   outAli = 'coregenome.aln',
-                   mafftMode = 'linsi',
-                   ogsDirNam,
-                   keepOgs = FALSE,
                    level,
+                   phyloMode = 'ml',
+                   nbs = 100L,
+                   outDir = 'phylen',
+                   aliPfx = 'coregenome',
+                   treePfx = 'phylo',
+                   mafftMode = 'linsi',
+                   keepOgs = FALSE,
                    n_threads = 1L){
 
   #Err
@@ -78,14 +98,18 @@ phylen <- function(gffs = character(),
     stop("The hmm file doesn't exists in the specified path.")
   }
 
-  if(file.exists(outAli)){
-    stop("The 'outAli' already exists.")
-  }
-
-  mafftMode <- match.arg(mafftMode, choices = c('mafft', 'ginsi', 'linsi', 'einsi'))
+  mafftMode <- match.arg(mafftMode, choices = c('mafft',
+                                                'ginsi',
+                                                'linsi',
+                                                'einsi'))
 
   #wd
-  wd <- paste0(normalizePath(dirname(outAli)), '/')
+  if (dir.exists(outDir)){
+    wd <- paste0(normalizePath(outDir), '/')
+  } else{
+    dir.create(outDir)
+    wd <- paste0(normalizePath(outDir), '/')
+  }
 
   #Decompress hmm.tar.gz, concatenate models, hmmpress
   hmm <- setHmm(hmm = hmmFile, isCompressed)
@@ -169,11 +193,8 @@ phylen <- function(gffs = character(),
 
   #Write groups of orthologous
   cat('Writting fastas.. ')
-  if (missing(ogsDirNam) || dir.exists(ogsDirNam)){
-    now <- format(Sys.time(), "%b%d%H%M%S")
-    ogsDirNam <- paste0(wd, 'phylen_', now, '/')
-    dir.create(ogsDirNam)
-  }
+  ogsDirNam <- paste0(wd, 'orthogroups/')
+  dir.create(ogsDirNam)
   gfi <- lapply(names(ges), function(x){
     ofi <- paste0(ogsDirNam, x,'.fasta')
     write.fasta(ffns[ges[[x]]],
@@ -204,6 +225,7 @@ phylen <- function(gffs = character(),
 
 
   #Concatenates vertical
+  outAli <- paste0(wd, aliPfx, '.aln')
   cv <- catVert(outfile = outAli,
                 sos = ch)
   file.remove(ch)
@@ -215,16 +237,27 @@ phylen <- function(gffs = character(),
     cat('DONE!\n')
   }
 
-  #Trim?
+  #phylo
+  cat('Generating phylogeny..\n')
+  phylo <- computePhylo(ali = cv,
+                        mode = phyloMode,
+                        nbs = nbs,
+                        n_threads = n_threads,
+                        outPrefix = treePfx,
+                        outDir = wd)
+  cat('Generating phylogeny.. DONE!\n\n')
 
   #Out
   fin <- paste0('Finished: ',
                 length(ge),
                 ' groups of orthologous from ',
                 nrow(pm),
-                ' isolates have been used in the alignment.\n')
+                ' isolates have been used in the alignment.\n',
+                'Returning an object of class "phylo" with ',
+                length(phylo$tree$tip.label), ' and ',
+                phylo$tree$Nnode, ' nodes.\n')
   cat(fin)
-  return(cv)
+  return(phylo)
 
 }
 
