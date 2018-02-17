@@ -77,6 +77,18 @@ alignment (see \code{keepOgs} parameter).
 Identify and align core genes, concatenate the alignments
 in a single file, and use it to compute a phylogeny.
 }
+\details{
+This function takes gff files as returned by prokka (Seemann T,
+2014) and a set of hmm models, search the models in the genomes, identifies
+the "core" set of genes, align and concatenates them into a "super gene"
+alignemnt. Once this alignment is built, a phylogeny is inferred.
+
+HMMER 3.1b2 is used as search engine, and MAFFT aligner is used to align the
+orthologous groups. Both software must be installed before running this
+pipeline.
+
+\link{phangorn} package is used to perform the phylogenetic inference.
+}
 \references{
 Paradis E., Claude J. & Strimmer K. 2004. APE: analyses of phylogenetics and
 evolution in R language. Bioinformatics 20: 289-290.

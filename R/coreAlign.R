@@ -50,7 +50,16 @@
 #' (or two, see \code{nbs} parameter), and an object of class "phylo" on
 #' console. Optionally, a directory with the orthologous groups used for the
 #' alignment (see \code{keepOgs} parameter).
-#' @details
+#' @details This function takes gff files as returned by prokka (Seemann T,
+#' 2014) and a set of hmm models, search the models in the genomes, identifies
+#' the "core" set of genes, align and concatenates them into a "super gene"
+#' alignemnt. Once this alignment is built, a phylogeny is inferred.
+#'
+#' HMMER 3.1b2 is used as search engine, and MAFFT aligner is used to align the
+#' orthologous groups. Both software must be installed before running this
+#' pipeline.
+#'
+#' \link{phangorn} package is used to perform the phylogenetic inference.
 #' @importFrom parallel mclapply
 #' @importFrom seqinr write.fasta
 #' @importFrom graphics plot
@@ -86,6 +95,19 @@ phylen <- function(gffs = character(),
                    n_threads = 1L){
 
   #Err
+
+  if (.Platform$OS.type!='unix'){
+    stop('Sorry, this package works only on unix-like platforms.')
+  }
+
+  if(Sys.which('hmmsearch')==''){
+    stop('hmmsearch is not in $PATH. Please install it before running this function.')
+  }
+
+  if(Sys.which('mafft')==''){
+    stop('mafft is not in $PATH. Please install it before running this function.')
+  }
+
   if (any(!file.exists(gffs))){
     stop("One or more gff files doesn't exists.")
   }
