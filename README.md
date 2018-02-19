@@ -12,7 +12,7 @@ To work, it is required to have installed on your $PATH variable the following s
  * A custom set of HMMs concatenated into one single file.
  
 ## Installation
-```
+```r
 devtools::install_github('iferres/phylen')
 ```
 
