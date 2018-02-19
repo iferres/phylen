@@ -1,5 +1,5 @@
 ---
-title: 'Phylen: automatic phylogenetic reconstruction from the EggNOG database'
+title: 'Phylen: automatic phylogenetic reconstruction using the EggNOG database'
 tags:
   - phylogenetics
   - bioinformatics

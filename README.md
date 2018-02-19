@@ -1,5 +1,5 @@
 # phylen
-Automatic phylogenetic reconstruction from the EggNOG database (or others) hmm files.
+Automatic phylogenetic reconstruction using the EggNOG database (or others) hmm files.
 
 ## Dependencies
 To work, it is required to have installed on your $PATH variable the following software:
