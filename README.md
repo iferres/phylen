@@ -62,7 +62,7 @@ A `data.frame` with the available datasets and their respective "nog" prefixes.
 ## `download_nog_hmm()`: Download specific hmm datasets from EggNOG.
 ### Usage
 ```r
-download\_nog\_hmm(nog.prefix = "proNOG", onDir = ".")
+download_nog_hmm(nog.prefix = "proNOG", onDir = ".")
 ```
 ### Description
 Takes a nog prefix and downloads a compressed (.tar.gz) file from EggNOG db containing the hmm models of the specified group.
