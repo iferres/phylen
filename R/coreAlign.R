@@ -46,6 +46,7 @@
 #' \code{TRUE}, then a directory called "orthogroups" is kept inside the
 #' \code{outDir} directory.
 #' @param n_threads \code{integer} The number of cpus to use.
+#' @param ... Further arguments to pass to \link[phangorn]{optim.pml}.
 #' @return A core genome alignment file, a phylogenetic tree in newick format
 #' (or two, see \code{nbs} parameter), and an object of class "phylo" on
 #' console. Optionally, a directory with the orthologous groups used for the
@@ -92,7 +93,8 @@ phylen <- function(gffs = character(),
                    treePfx = 'phylo',
                    mafftMode = 'linsi',
                    keepOgs = FALSE,
-                   n_threads = 1L){
+                   n_threads = 1L,
+                   ...){
 
   #Err
 
@@ -266,7 +268,8 @@ phylen <- function(gffs = character(),
                         nbs = nbs,
                         n_threads = n_threads,
                         outPrefix = treePfx,
-                        outDir = wd)
+                        outDir = wd,
+                        ...)
   cat('Generating phylogeny.. DONE!\n\n')
 
   #Out
