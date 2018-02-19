@@ -43,7 +43,7 @@ Identify and align core genes, concatenate the alignments in a single file, and 
  * `n_threads`: `integer` The number of cpus to use.
  
 ### Value
-A core genome alignment file, a phylogenetic tree in newick format (or two, see `nbs` parameter), and an object of class `phylo` on console (see [phangorn]{https://github.com/KlausVigo/phangorn} and [ape]{http://ape-package.ird.fr/}). Optionally, a directory with the orthologous groups used for the alignment (see `keepOgs` parameter).
+A core genome alignment file, a phylogenetic tree in newick format (or two, see `nbs` parameter), and an object of class `phylo` on console (see [phangorn](https://github.com/KlausVigo/phangorn) and [ape](http://ape-package.ird.fr/)). Optionally, a directory with the orthologous groups used for the alignment (see `keepOgs` parameter).
 
 ## Other useful functions
 The following package functions conects with EggNOG webpage and return information from it:
