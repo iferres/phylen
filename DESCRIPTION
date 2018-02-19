@@ -18,10 +18,11 @@ Imports:
    XML
 Description: This is a package designed for easly compute a phylogeny with the
     concatenated alignemnt of a set of pre-computed Hidden Markov Models hits. 
-    It uses HMMER 3.1b2 as search engine, and MAFFT as aligner. It also 
-    provides a couple of functions to download specific sets of curated HMMs 
-    from the EggNOG database in order to allow the identification of the "core"
-    genes and build the alignment and phylogeny with them.
+    It uses HMMER 3.1b2 as search engine, MAFFT as aligner, and PHANGORN 
+    package as phylogeny inference software. It also provides a couple of 
+    functions to download specific sets of curated HMMs from the EggNOG 
+    database in order to allow the identification of "core" genes and build the
+    alignment and phylogeny with them.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
