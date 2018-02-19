@@ -33,7 +33,7 @@
 #' @param outDir Where to put the output files. If \code{outDir} do not exists,
 #' then a directory with the specified name is created.
 #' @param aliPfx A \code{character} string with the coregenome alignment file
-#' prefix. (Default: coregenome).
+#' prefix. (Default: supergene).
 #' @param treePfx A \code{character} string with the newick trees files
 #' prefixes. (Default: phylo).
 #' @param mafftMode Alignment accuracy. One of "mafft", "ginsi", "linsi" or
@@ -88,7 +88,7 @@ phylen <- function(gffs = character(),
                    phyloMode = 'ml',
                    nbs = 100L,
                    outDir = 'phylen',
-                   aliPfx = 'coregenome',
+                   aliPfx = 'supergene',
                    treePfx = 'phylo',
                    mafftMode = 'linsi',
                    keepOgs = FALSE,
