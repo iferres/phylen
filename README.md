@@ -74,5 +74,16 @@ A tar.gz compressed file on the specified directory. On console it returns the p
 
 The `phylen` package has been designed for UNIX-like platforms only.
 
+## Citation
+
+The [manuscript](https://github.com/openjournals/joss-papers/blob/joss.00590/joss.00590/10.21105.joss.00590.pdf) describing `phylen` is currently under review in The Journal of Open Source Software.
+
+## Papers citing `phylen`
+
+We have used `phylen` to build some phylogenies published in the following papers:
+ * Fresia P, et al. 2017. Genomic and clinical evidence uncovers the enterohepatic species _Helicobacter Valdiviensis_ as a potential human intestinal pathogen. Helicobacter, 22(5). [doi:10.1111/hel.12425](http://onlinelibrary.wiley.com/doi/10.1111/hel.12425/full).
+ * Puche R, et al. 2017. _Leptospira venezuelensis_ sp. nov., a new member of the intermediates group isolated from rodents, cattle and humans. Int J Syst Evol Microbiol, 68:513-517. [doi:10.1099/ijsem.0.002528](http://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijsem.0.002528).
+ * Thibeaux R, et al. 2018. Deciphering the unexplored _Leptospira_ diversity from soils uncovers genomic evolution to
+virulence. Microb Genom, 4(1). [doi:10.1099/mgen.0.000144](http://mgen.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000144).
 
 
