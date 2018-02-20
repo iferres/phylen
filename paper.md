@@ -15,7 +15,7 @@ affiliations:
  - name: Unidad de Bioinformática, Institut Pasteur de Montevideo, Uruguay
    index: 1
  - name: Corresponding author: Gregorio Iraola (giraola@pasteur.edu.uy)
-   index: *
+   index: 2
 date: 10 February 2018
 bibliography: paper.bib
 ---
