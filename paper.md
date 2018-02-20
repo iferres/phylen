@@ -10,12 +10,10 @@ authors:
    affiliation: "1"
  - name: Gregorio Iraola
    orcid: 0000-0002-6516-3404 
-   affiliation: "1, *"
+   affiliation: "1"
 affiliations:
  - name: Unidad de Bioinformática, Institut Pasteur de Montevideo, Uruguay
    index: 1
- - name: Corresponding author: Gregorio Iraola (giraola@pasteur.edu.uy)
-   index: 2
 date: 10 February 2018
 bibliography: paper.bib
 ---
