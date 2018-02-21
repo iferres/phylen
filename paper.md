@@ -33,6 +33,6 @@ Phylen is useful to automatically build phylogenies at any desired taxonomic ran
 
 # Acknowledgements
 
-I.F. was supported by ANII (Uruguay) posgraduation program grant \\POS_NAC_2016_1_131079. We thank Pablo Fresia and Daniela Costa for testing Phylen. 
+I.F. was supported by ANII (Uruguay) posgraduation grant POS_NAC_2016_1_131079. We thank Pablo Fresia and Daniela Costa for testing Phylen. 
 
 # References
