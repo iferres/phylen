@@ -6,8 +6,8 @@
 \usage{
 phylen(gffs = character(), hmmFile = character(), isCompressed = TRUE,
   eval = 1e-30, level, phyloMode = "ml", nbs = 100L, outDir = "phylen",
-  aliPfx = "coregenome", treePfx = "phylo", mafftMode = "linsi",
-  keepOgs = FALSE, n_threads = 1L)
+  aliPfx = "supergene", treePfx = "phylo", mafftMode = "linsi",
+  keepOgs = FALSE, n_threads = 1L, ...)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
@@ -49,7 +49,7 @@ ML optimized tree (subffix "_ml.nwk"), and another with the bootstrap trees
 then a directory with the specified name is created.}
 
 \item{aliPfx}{A \code{character} string with the coregenome alignment file
-prefix. (Default: coregenome).}
+prefix. (Default: supergene).}
 
 \item{treePfx}{A \code{character} string with the newick trees files
 prefixes. (Default: phylo).}
@@ -66,6 +66,8 @@ fasta files containing the orthologous groups (DEFAULT: \code{FALSE}). If
 \code{outDir} directory.}
 
 \item{n_threads}{\code{integer} The number of cpus to use.}
+
+\item{...}{Further arguments to pass to \link[phangorn]{optim.pml}.}
 }
 \value{
 A core genome alignment file, a phylogenetic tree in newick format
