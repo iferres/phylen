@@ -1,7 +1,7 @@
 phylen
 ================
 
-Phylen is an R package that performs automatic phylogenetic reconstruction given a set of Hidden Markov Models (HMMs). Genomes are screened against these HMMs, genes present in all genomes ("core genes") are aligned individually, those alignments are concatenated into a single supergene alignment, and a phylogenetic reconstruction is performed and returned as an object of class "phylo" so it can be further analysed using ape/phangorn framework in R. Functions to download well curated HMMs from clade-specific orthologous sets from the EggNOG database are provided although any custom set of HMMs can be used as well.
+Phylen is an R package that performs automatic phylogenetic reconstruction given a set of Hidden Markov Models (HMMs). Genomes are screened against these HMMs, genes found in all genomes ("core genes") are aligned individually, those alignments are concatenated into a single supergene alignment, and a phylogenetic reconstruction is performed and returned as an object of class "phylo" so it can be further analysed using ape/phangorn framework in R. Functions to download well curated HMMs from clade-specific orthologous sets from the EggNOG database are provided although any custom set of HMMs can be used as well.
 
 ## Installation
 
@@ -17,12 +17,12 @@ devtools::install_github("iferres/phylen")
 
 ## Standard workflow
 
-This tutorial begins with the extraction of toy data attached on this package. It consists on 10 genomes of the *Campylobacterales* order, 5 of them are *Campylobacter* species and the other 5 are *Helicobacter* species.
+This tutorial begins with the extraction of toy data attached on this package. It consists in 10 genomes of the *Campylobacterales* order, 5 of them are *Campylobacter* species and the other 5 are *Helicobacter* species.
 
 ``` r
 # List the attached tar.gz file
 tgz <- system.file('extdata', 'toydata.tar.gz', package = 'phylen')
-# List the files inside if it
+# List the files inside it
 gff <- untar(tarfile = tgz, exdir = getwd(), list = T)
 # Decompress on current working directory
 untar(tarfile = tgz,exdir = getwd())
@@ -41,7 +41,7 @@ gff
     ##  [9] "H_pylori_str_2018.gff"                              
     ## [10] "H_typhlonius_str_1.gff"
 
-Lets load the `phylen` package and list the available Hidden Markov Models (HMMs) on the [EggNOG](http://eggnogdb.embl.de/#/app/home) database.
+Let's load the `phylen` package and list the available Hidden Markov Models (HMMs) on the [EggNOG](http://eggnogdb.embl.de/#/app/home) database.
 
 ``` r
 # Load the phylen package
@@ -53,7 +53,7 @@ library(phylen)
     ## Loading required package: ape
 
 ``` r
-# List fist 50 available sets of EggNOG well curated HMMs sets
+# List first 50 available sets of EggNOG
 list_eggnogdb()[1:50, ]
 ```
 
@@ -109,7 +109,7 @@ list_eggnogdb()[1:50, ]
     ## 49 Proteobacteria_epsilon    eproNOG
     ## 50        Erysipelotrichi     eryNOG
 
-As we know, the order Campylobacterales belongs to the Epsilonproteobacteria class, which is listed at row number 49. The corresponding set of HMMs is, then, `eproNOG`.
+The order *Campylobacterales* belongs to the class *Epsilonproteobacteria*, which is listed at row number 49. The corresponding set of HMMs is, then, `eproNOG`.
 
 Now, we will download the HMMs directly from the EggNOG servers using the `download_nog_hmm()` function.
 
@@ -120,7 +120,7 @@ hmm
 
     ## [1] "/home/iferres/Documents/eproNOG.hmm.tar.gz"
 
-Now we have the HMMs we can procede to run the main function in order to obtain a core genome alignment, and a phylogeny. This would take ~20-30 min using 4 cpus.
+Now we have the HMMs, so we can proceed to run the main function in order to obtain a core genome alignment, and a phylogeny. This would take ~20-30 min using 4 CPUs.
 
 ``` r
 p <- phylen(gffs = gff, # The gff files extracted on the first step
@@ -172,7 +172,7 @@ p <- phylen(gffs = gff, # The gff files extracted on the first step
     ## Finished: 658 groups of orthologous from 10 isolates have been used in the alignment.
     ## Returning an object of class "phylo" with 10 tips and 8 nodes.
 
-Now we have a "phylo" object, and we can continue analizing it with `phangorn` and `ape` packages.
+Now we have a "phylo" object, and we can continue analyzing it with `phangorn` and `ape` packages.
 
 ``` r
 # Print it
@@ -206,6 +206,6 @@ plot(p, type = 'unrooted', cex = 0.7, lab4ut = 'axial')
 
 ## Citation
 
-A manuscript for publication was submitted to the [JOSS](https://joss.theoj.org/) journal.
+Phylen manuscript is under review in [JOSS](https://joss.theoj.org/).
 
 This package has been successfully used in already published papers, see `paper.md` on this repository for details.
