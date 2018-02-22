@@ -1,20 +1,19 @@
 phylen
 ================
 
-Installation
-------------
+## Installation
+
 The easiest way to install this package is using `devtools` package:
 
 ``` r
 devtools::install_github("iferres/phylen")
 ```
 
-## Requirements
+### Requirements
 
 `phylen` depends on [HMMER 3.1b2](http://hmmer.org/) and [MAFFT](https://mafft.cbrc.jp/alignment/software/). You should have them installed on you `$PATH` variable prior to using this software.
 
-Standard workflow
------------------
+## Standard workflow
 
 This tutorial begins with the extraction of toy data attached on this package. It consists on 10 genomes of the Campylobacterales order, 5 of them are Campylobacter species and the other 5 are Helicobacter species.
 
@@ -203,8 +202,7 @@ plot(p, type = 'unrooted')
 ![](vignettes/readme_img1.png)
 
 
-Citation
---------
+## Citation
 
 A manuscript for publication was submitted to the [JOSS](https://joss.theoj.org/) journal.
 
