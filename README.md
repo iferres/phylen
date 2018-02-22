@@ -1,6 +1,18 @@
 phylen
 ================
 
+Installation
+------------
+The easiest way to install this package is using `devtools` package:
+
+``` r
+devtools::install_github("iferres/phylen")
+```
+
+## Requirements
+
+`phylen` depends on [HMMER 3.1b2](http://hmmer.org/) and [MAFFT](https://mafft.cbrc.jp/alignment/software/). You should have them installed on you `$PATH` variable prior to using this software.
+
 Standard workflow
 -----------------
 
@@ -28,7 +40,7 @@ gff
     ##  [9] "H_pylori_str_2018.gff"                              
     ## [10] "H_typhlonius_str_1.gff"
 
-Lets load the `phylen` package and list the available Hidden Markov Models (HMMs) on the EggNOG database.
+Lets load the `phylen` package and list the available Hidden Markov Models (HMMs) on the [EggNOG](http://eggnogdb.embl.de/#/app/home) database.
 
 ``` r
 # Load the phylen package
@@ -105,7 +117,7 @@ hmm <- download_nog_hmm(nog.prefix = "eproNOG", onDir = getwd())
 hmm
 ```
 
-    ## [1] "/home/ignacio/Desktop/phylen_test/eproNOG.hmm.tar.gz"
+    ## [1] "/home/iferres/Documents/eproNOG.hmm.tar.gz"
 
 Now we have the HMMs we can procede to run the main function in order to obtain a core genome alignment, and a phylogeny. This would take ~20-30 min using 4 cpus.
 
@@ -189,3 +201,11 @@ plot(p, type = 'unrooted')
 ```
 
 ![](vignettes/readme_img1.png)
+
+
+Citation
+--------
+
+A manuscript for publication was submitted to the [JOSS](https://joss.theoj.org/) journal.
+
+This package has been successfully used in already published papers, see `paper.md` on this repository for details.
