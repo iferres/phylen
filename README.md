@@ -17,7 +17,7 @@ devtools::install_github("iferres/phylen")
 
 ## Standard workflow
 
-This tutorial begins with the extraction of toy data attached on this package. It consists on 10 genomes of the Campylobacterales order, 5 of them are Campylobacter species and the other 5 are Helicobacter species.
+This tutorial begins with the extraction of toy data attached on this package. It consists on 10 genomes of the *Campylobacterales* order, 5 of them are *Campylobacter* species and the other 5 are *Helicobacter* species.
 
 ``` r
 # List the attached tar.gz file
@@ -172,7 +172,7 @@ p <- phylen(gffs = gff, # The gff files extracted on the first step
     ## Finished: 658 groups of orthologous from 10 isolates have been used in the alignment.
     ## Returning an object of class "phylo" with 10 tips and 8 nodes.
 
-Now we have a "phylo" object, and we can continue analizing it with "phangorn" and "ape" package.
+Now we have a "phylo" object, and we can continue analizing it with `phangorn` and `ape` packages.
 
 ``` r
 # Print it
@@ -198,7 +198,7 @@ class(p)
 
 ``` r
 # Plot it
-plot(p, type = 'unrooted')
+plot(p, type = 'unrooted', cex = 0.7, lab4ut = 'axial')
 ```
 
 ![](vignettes/readme_img1.png)
