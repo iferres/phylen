@@ -1,89 +1,191 @@
-# phylen
-Automatic phylogenetic reconstruction using the EggNOG database (or others) hmm files.
+phylen
+================
 
-## Dependencies
-To work, it is required to have installed on your $PATH variable the following software:
- * [Mafft](http://mafft.cbrc.jp/alignment/software/)
- * [HMMER 3.1b2](http://hmmer.org/download.html)
-### Other external dependencies
+Standard workflow
+-----------------
 
- * A [EggNOG](http://eggnogdb.embl.de/#/app/downloads) HMM database file. It's not required to decompress (`untar`) those files before running the pipeline. Or alternatively...
+This tutorial begins with the extraction of toy data attached on this package. It consists on 10 genomes of the Campylobacterales order, 5 of them are Campylobacter species and the other 5 are Helicobacter species.
 
- * A custom set of HMMs concatenated into one single file.
- 
-## Installation
-```r
-devtools::install_github('iferres/phylen')
+``` r
+# List the attached tar.gz file
+tgz <- system.file('extdata', 'toydata.tar.gz', package = 'phylen')
+# List the files inside if it
+gff <- untar(tarfile = tgz, exdir = getwd(), list = T)
+# Decompress on current working directory
+untar(tarfile = tgz,exdir = getwd())
+# List the decompressed files
+gff
 ```
 
-## `phylen`: Compute Concatenated Alignment And Phylogeny
-### Usage
-```r
-phylen(gffs = character(), hmmFile = character(), isCompressed = TRUE,
-  eval = 1e-30, level, phyloMode = "ml", nbs = 100L, outDir = "phylen",
-  aliPfx = "coregenome", treePfx = "phylo", mafftMode = "linsi",
-  keepOgs = FALSE, n_threads = 1L)
+    ##  [1] "C_fetus_subsp_testudinum_Sp3.gff"                   
+    ##  [2] "C_fetus_subsp_venerealis_str_84-112.gff"            
+    ##  [3] "C_hyointestinalis_subsp_lawsonii_CCUG_27631.gff"    
+    ##  [4] "C_iguaniorum_str_RM11343.gff"                       
+    ##  [5] "C_pinnipediorum_subsp_pinnipediorum_str_RM17262.gff"
+    ##  [6] "H_bilis_str_AAQJH.gff"                              
+    ##  [7] "H_himalayensis_str_YS1.gff"                         
+    ##  [8] "H_pylori_J166.gff"                                  
+    ##  [9] "H_pylori_str_2018.gff"                              
+    ## [10] "H_typhlonius_str_1.gff"
+
+Lets load the `phylen` package and list the available Hidden Markov Models (HMMs) on the EggNOG database.
+
+``` r
+# Load the phylen package
+library(phylen)
 ```
-### Description
-Identify and align multiple genes, concatenate the alignments in a single file, and use it to compute a phylogeny.
 
-### Arguments
- * `gffs`: A `character` vector with the gff file paths.
- * `hmmFile`: The path to the ".hmm.tar.gz" file downloaded from EggNOG website or using `list_eggnogdb` and `download_nog_hmm` functions on this package. The already prepared ".hmm" text file can also be provided (see `isCompressed` below). Alternatively a custom set of ".hmm" files can be passed as a concatenated single file.
- * `isCompressed`: `logical` If the `hmmFile` parameter points to the "hmm.tar.gz" file downloaded from EggNOG, it should be set to `TRUE`. If the pipeline has been already ran or a custom set of HMMs is used, the `hmmFile` parameter should point to the ".hmm" file, and the `isCompressed` parameter should be set to `FALSE`. If the pipeline was ran before, the function will also check for index files and will produce them if any of the required are missing. See "hmmpress" from HMMER 3.1b2 manual.
- * `eval`: Consider hits with an evalue less than eval.
- * `level`: `numeric` The percentage of isolates a gene must be present to be considered part of the concatenated alignment. If nothing is specified, a plot is generated at the middle of the process showing the number of recovered genes in a rage of 100% to 85% of the genomes. The process won't continue until the user choose a level.
- * `phyloMode`: One of `"nj"` (Neighbour-joining) of `"ml"` (Maximum likelihood).
- * `nbs`: Number of bootstrap. If `phyloMode` is set to `"nj"`, this parameter is ignored. If `phyloMode` is set to `"ml"`, and `nbs` is set to `0`, no bootstrap is performed. If `phyloMode` = `"ml"`, and `nbs` > 0, then bootstrap is performed and 2 newick files are generated, one with the ML optimized tree (subffix "\_ml.nwk"), and another with the bootstrap trees (subffix "\_ml\_nbs.nwk").
- * `outDir`: Where to write the output files (DEFAULT: "."). If `outDir` does not exist, then a directory with the specified name is created.
- * `aliPfx`: A character string with the concatenated alignment file prefix. (Default: `"supergene"`).
- * `treePfx`: A character string with the newick trees files prefixes. (Default: `"phylo"`).
- * `mafftMode`: Alignment accuracy. One of `"mafft"`, `"ginsi"`, `"linsi"` or `"einsi"`. The first one is the default MAFFT mode, very fast. The second uses mafft options `"–maxiterate 1000 –globalpair"`. The third uses `"–maxiterate 1000 –localpair"` (accurate, DEFAULT). The fourth uses `"–ep 0 –maxiterate 1000 –genafpair"`. See MAFFT manual for more details.
- * `keepOgs`: `logical` If want to keep an intermediate directory with fasta files containing the orthologous groups (DEFAULT: `FALSE`). If `TRUE`, then a directory called "orthogroups" is kept inside the `outDir` directory.
- * `n_threads`: `integer` The number of cpus to use.
- 
-### Value
-A concatenated alignment file, a phylogenetic tree in newick format (or two, see `nbs` parameter), and an object of class `phylo` on console (see [phangorn](https://github.com/KlausVigo/phangorn) and [ape](http://ape-package.ird.fr/)). Optionally, a directory with the orthologous groups used for the alignment (see `keepOgs` parameter).
+    ## Loading required package: phangorn
 
-## Other useful functions
-The following package functions conects with EggNOG webpage and return information from it:
+    ## Loading required package: ape
 
-## `list_eggnogdb()`: List available EggNOG db datasets
-### Usage
-```r
-list_eggnogdb()
+``` r
+# List fist 50 available sets of EggNOG well curated HMMs sets
+list_eggnogdb()[1:50, ]
 ```
-### Description
-This function lists all the available EggNOG datasets to download, associated with their nog prefix.
 
-### Value
-A `data.frame` with the available datasets and their respective "nog" prefixes.
+    ##                level.name nog.prefix
+    ## 1                    LUCA        NOG
+    ## 2           Acidobacteria     aciNOG
+    ## 3          Acidobacteriia    acidNOG
+    ## 4            Aconoidasida     acoNOG
+    ## 5          Actinobacteria     actNOG
+    ## 6              Agaricales     agaNOG
+    ## 7          Agaricomycetes    agarNOG
+    ## 8             Apicomplexa     apiNOG
+    ## 9    Proteobacteria_alpha    aproNOG
+    ## 10              Aquificae     aquNOG
+    ## 11                Archaea      arNOG
+    ## 12           Archaeoglobi     arcNOG
+    ## 13             Arthropoda     artNOG
+    ## 14      Arthrodermataceae    arthNOG
+    ## 15             Ascomycota     ascNOG
+    ## 16                   Aves     aveNOG
+    ## 17                Bacilli     bacNOG
+    ## 18               Bacteria    bactNOG
+    ## 19            Bacteroidia   bacteNOG
+    ## 20          Basidiomycota     basNOG
+    ## 21          Bacteroidetes    bctoNOG
+    ## 22              Bilateria      biNOG
+    ## 23    Proteobacteria_beta    bproNOG
+    ## 24            Brassicales     braNOG
+    ## 25              Carnivora     carNOG
+    ## 26          Chaetomiaceae     chaNOG
+    ## 27               Chlorobi     chlNOG
+    ## 28             Chlamydiae    chlaNOG
+    ## 29            Chloroflexi    chloNOG
+    ## 30            Chloroflexi   chlorNOG
+    ## 31            Chlorophyta  chloroNOG
+    ## 32               Chordata    chorNOG
+    ## 33            Chromadorea     chrNOG
+    ## 34             Clostridia     cloNOG
+    ## 35               Coccidia     cocNOG
+    ## 36          Crenarchaeota     creNOG
+    ## 37      Cryptosporidiidae     cryNOG
+    ## 38          Cyanobacteria     cyaNOG
+    ## 39             Cytophagia     cytNOG
+    ## 40      Debaryomycetaceae     debNOG
+    ## 41        Deferribacteres     defNOG
+    ## 42      Dehalococcoidetes     dehNOG
+    ## 43     Deinococcusthermus     deiNOG
+    ## 44          delta/epsilon     delNOG
+    ## 45                Diptera     dipNOG
+    ## 46        Dothideomycetes     dotNOG
+    ## 47   Proteobacteria_delta    dproNOG
+    ## 48          Drosophilidae     droNOG
+    ## 49 Proteobacteria_epsilon    eproNOG
+    ## 50        Erysipelotrichi     eryNOG
 
-## `download_nog_hmm()`: Download specific hmm datasets from EggNOG.
-### Usage
-```r
-download_nog_hmm(nog.prefix = "proNOG", onDir = ".")
+As we know, the order Campylobacterales belongs to the Epsilonproteobacteria class, which is listed at row number 49. The corresponding set of HMMs is, then, `eproNOG`.
+
+Now, we will download the HMMs directly from the EggNOG servers using the `download_nog_hmm()` function.
+
+``` r
+hmm <- download_nog_hmm(nog.prefix = "eproNOG", onDir = getwd())
+hmm
 ```
-### Description
-Takes a nog prefix and downloads a compressed (.tar.gz) file from EggNOG db containing the hmm models of the specified group.
 
-### Value
-A tar.gz compressed file on the specified directory. On console it returns the path to the downloaded file.
+    ## [1] "/home/ignacio/Desktop/phylen_test/eproNOG.hmm.tar.gz"
 
-## Note:
+Now we have the HMMs we can procede to run the main function in order to obtain a core genome alignment, and a phylogeny. This would take ~20-30 min using 4 cpus.
 
-The `phylen` package has been designed for UNIX-like platforms only.
+``` r
+p <- phylen(gffs = gff, # The gff files extracted on the first step
+            hmmFile = hmm, # The downloaded HMMs
+            isCompressed = TRUE, # The downloaded HMMs are compressed (tar.gz)
+            phyloMode = "ml", # nj or ml, in this case we will use maximum likelihood
+            nbs = 100, # The number of bootstrap.
+            level = 100, # The percentage of genomes a gene must be in to be considered as part of the coregenome.
+            outDir = "phylen", # Lets create a directory called "phylen" to put the output files
+            n_threads = 4) # Use 4 threads
+```
 
-## Citation
+    ## Decompressing.. DONE!
+    ## Concatenating.. 
+    ## ===========================================================================
+    ## DONE!
+    ## Pressing.. DONE!
+    ## Getting information from hmms.. DONE!
+    ## Searching.. DONE!
+    ## Computing panmatrix.. DONE!
+    ## Getting core-genes.. DONE!
+    ## Writting fastas.. DONE!
+    ## Aligning.. DONE!
+    ## Concatenating.. DONE!
+    ## Removing intermediate files.. DONE!
+    ## Generating phylogeny..
+    ## optimize edge weights:  -5958637 --> -5731557 
+    ## optimize base frequencies:  -5731557 --> -5686007 
+    ## optimize rate matrix:  -5686007 --> -5621016 
+    ## optimize edge weights:  -5621016 --> -5619537 
+    ## optimize base frequencies:  -5619537 --> -5616203 
+    ## optimize rate matrix:  -5616203 --> -5615171 
+    ## optimize edge weights:  -5615171 --> -5615158 
+    ## optimize base frequencies:  -5615158 --> -5614921 
+    ## optimize rate matrix:  -5614921 --> -5614863 
+    ## optimize edge weights:  -5614863 --> -5614861 
+    ## optimize base frequencies:  -5614861 --> -5614846 
+    ## optimize rate matrix:  -5614846 --> -5614842 
+    ## optimize edge weights:  -5614842 --> -5614842 
+    ## optimize base frequencies:  -5614842 --> -5614841 
+    ## optimize rate matrix:  -5614841 --> -5614841 
+    ## optimize edge weights:  -5614841 --> -5614841 
+    ## optimize base frequencies:  -5614841 --> -5614841 
+    ## optimize rate matrix:  -5614841 --> -5614841 
+    ## optimize edge weights:  -5614841 --> -5614841
 
-The [manuscript](https://github.com/openjournals/joss-papers/blob/joss.00590/joss.00590/10.21105.joss.00590.pdf) describing `phylen` is currently under review in The Journal of Open Source Software.
+    ## Generating phylogeny.. DONE!
+    ## 
+    ## Finished: 658 groups of orthologous from 10 isolates have been used in the alignment.
+    ## Returning an object of class "phylo" with 10 tips and 8 nodes.
 
-## Papers citing `phylen`
+Now we have a "phylo" object, and we can continue analizing it with "phangorn" and "ape" package.
 
-We have used `phylen` to build some phylogenies published in the following papers:
- * Fresia P, et al. 2017. Genomic and clinical evidence uncovers the enterohepatic species _Helicobacter Valdiviensis_ as a potential human intestinal pathogen. Helicobacter, 22(5). [doi:10.1111/hel.12425](http://onlinelibrary.wiley.com/doi/10.1111/hel.12425/full).
- * Puche R, et al. 2017. _Leptospira venezuelensis_ sp. nov., a new member of the intermediates group isolated from rodents, cattle and humans. Int J Syst Evol Microbiol, 68:513-517. [doi:10.1099/ijsem.0.002528](http://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijsem.0.002528).
- * Thibeaux R, et al. 2018. Deciphering the unexplored _Leptospira_ diversity from soils uncovers genomic evolution to
-virulence. Microb Genom, 4(1). [doi:10.1099/mgen.0.000144](http://mgen.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000144).
+``` r
+# Print it
+p
+```
 
+    ## 
+    ## Phylogenetic tree with 10 tips and 8 internal nodes.
+    ## 
+    ## Tip labels:
+    ##  C_fetus_subsp_testudinum_Sp3, C_fetus_subsp_venerealis_str_84-112, C_hyointestinalis_subsp_lawsonii_CCUG_27631, C_iguaniorum_str_RM11343, C_pinnipediorum_subsp_pinnipediorum_str_RM17262, H_bilis_str_AAQJH, ...
+    ## Node labels:
+    ##  100, 100, 100, 100, 100, 100, ...
+    ## 
+    ## Unrooted; includes branch lengths.
 
+``` r
+# Class?
+class(p)
+```
+
+    ## [1] "phylo"
+
+``` r
+# Plot it
+plot(p, type = 'unrooted')
+```
+
+![](vignettes/readme_img1.png)
