@@ -48,7 +48,7 @@ list_eggnogdb <- function(){
 #' @export
 download_nog_hmm <- function(nog.prefix='proNOG', onDir='.'){
 
-  onDir <- normalizePath(dirname(onDir))
+  onDir <- normalizePath(onDir)
   b <- 'http://eggnogdb.embl.de/download/latest/data/'
   hmm <- paste0(nog.prefix, '.hmm.tar.gz', collapse = '')
   dwn <- paste0(b,
