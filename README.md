@@ -1,6 +1,8 @@
 phylen
 ================
 
+Phylen is an R package that performs automatic phylogenetic reconstruction given a set of Hidden Markov Models (HMMs). Genomes are screened against these HMMs, genes present in all genomes ("core genes") are aligned individually, those alignments are concatenated into a single supergene alignment, and a phylogenetic reconstruction is performed and returned as an object of class "phylo" so it can be further analysed using ape/phangorn framework in R. Functions to download well curated HMMs from clade-specific orthologous sets from the EggNOG database are provided although any custom set of HMMs can be used as well.
+
 ## Installation
 
 The easiest way to install this package is using `devtools` package:
