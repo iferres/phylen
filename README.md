@@ -111,7 +111,7 @@ list_eggnogdb()[1:50, ]
 
 As we know, the order Campylobacterales belongs to the Epsilonproteobacteria class, which is listed at row number 49. The corresponding set of HMMs is, then, `eproNOG`.
 
-Now, we will download the HMMs directly from the EggNOG servers using the `download_nog_hmm()` function.
+We will download the HMMs directly from the EggNOG servers using the `download_nog_hmm()` function.
 
 ``` r
 hmm <- download_nog_hmm(nog.prefix = "eproNOG", onDir = getwd())
@@ -172,7 +172,7 @@ p <- phylen(gffs = gff, # The gff files extracted on the first step
     ## Finished: 658 groups of orthologous from 10 isolates have been used in the alignment.
     ## Returning an object of class "phylo" with 10 tips and 8 nodes.
 
-Now we have a "phylo" object, and we can continue analizing it with `phangorn` and `ape` packages.
+Finally we have a "phylo" object, and we can continue analizing it with `phangorn` and `ape` packages.
 
 ``` r
 # Print it
