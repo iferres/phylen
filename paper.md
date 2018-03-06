@@ -29,7 +29,7 @@ Phylen has been already used by our group for building the _Helicobacter_ genus 
 
 ![A) Schematic workflow of Phylen. B) Phylogeny of _Epsilonproteobacteria_ obtained with the eggNOG database (eproNOG orthologs).](figure1.png)
 
-Phylen is useful to automatically build phylogenies at any desired taxonomic rank from any set of genes like taxon-specific markers or the whole core genome. Phylen depends on the R package phangorn [@phangorn] for phylogenetic reconstruction and external tools including HMMER3 [@hmmer3] as gene search engine and MAFFT [@mafft] for multiple sequence alignment.
+Phylen has been designed to facilitate the reconstruction of high-resolution phylogenies at any desired taxonomic rank, and from any set of genes like taxon-specific markers or the whole core genome. Phylogenetic reconstruction is a standard kick-off  analysis in almost every comparative genomics project and despite many methods have been developed, Phylen is unique as integrates the highly accessed EggNOG database (for phylogenetic marker genes) with the R environment as a widely used programming interface for microbial genomics and data analysis. Phylen depends on the R package phangorn [@phangorn] for phylogenetic reconstruction and external tools including HMMER3 [@hmmer3] as gene search engine and MAFFT [@mafft] for multiple sequence alignment.
 
 # Acknowledgements
 
