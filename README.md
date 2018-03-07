@@ -204,6 +204,13 @@ plot(p, type = 'unrooted', cex = 0.7, lab4ut = 'axial')
 
 ![](vignettes/readme_img1.png)
 
+## Any questions?
+
+If you have any question about usage, implementation, or result interpretation, please feel free to ask. Send them to the [issue tracker](https://github.com/iferres/phylen/issues) or directly to my e-mail (iferres@pasteur.edu.uy). If you think your concern could help others, we encourage you to use the first channel of communication.
+
+## Contributing
+
+If you want to contribute to the development of this software, please refer to the [contributing guidelines](CONTRIBUTING.md).
 
 ## Citation
 
