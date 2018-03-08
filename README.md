@@ -17,7 +17,9 @@ devtools::install_github("iferres/phylen")
 
 ## Standard workflow
 
-This tutorial begins with the extraction of toy data attached on this package. It consists in 10 genomes of the *Campylobacterales* order, 5 of them are *Campylobacter* species and the other 5 are *Helicobacter* species. Files *must* be in **gff3** format, as returned by the [prokka](https://github.com/tseemann/prokka) annotation software.
+This tutorial begins with the extraction of toy data attached on this package. It consists in 10 genomes of the *Campylobacterales* order, 5 of them are *Campylobacter* species and the other 5 are *Helicobacter* species. 
+
+**Note:** `phylen` input files must be in **gff3** format, as returned by the [prokka](https://github.com/tseemann/prokka) annotation software.
 
 ``` r
 # List the attached tar.gz file
