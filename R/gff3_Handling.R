@@ -266,28 +266,6 @@ extractGffTable <- function(rl){
   out
 }
 
-
-#' @name getSeqOfType
-#' @title Get sequences (nucleotidic or aminoacidic)
-#' @description Extract cds either nucleotidic (gene) or aminoacidic (protein).
-#' @param seqs \code{list} of sequences as passed by \link{extractSeqsFromGff3}.
-#' @param type \code{character}. Either 'AA' or 'DNA'.
-#' @return A \code{list} of sequences.
-#' @author Ignacio Ferres
-getSeqOfType <- function(seqs,type='AA'){
-  names(seqs) -> n
-
-  unlist(seqs,recursive = F) -> un
-  if (type=='AA'){
-    lapply(un,function(x){x[[2]]}) -> lap
-  }else{
-    lapply(un,function(x){x[[1]]}) -> lap
-  }
-  names(lap) <- sub('.gff.',';',names(lap))
-  lap
-}
-
-
 #' @name translate
 #' @title Translate
 #' @description Slightly modified version of \link[seqinr]{translate} function
