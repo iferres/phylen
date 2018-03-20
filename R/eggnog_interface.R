@@ -58,7 +58,7 @@ download_nog_hmm <- function(nog.prefix='proNOG', onDir='.'){
                 collapse = '')
 
   destfile <- paste0(onDir, '/', hmm, collapse = '')
-  download.file(url = dwn, destfile = hmm)
+  download.file(url = dwn, destfile = destfile)
   destfile
 
 }
