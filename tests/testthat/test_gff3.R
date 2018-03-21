@@ -3,8 +3,8 @@ context('gff3')
 tgz <- system.file('testdata', 'test.tar.gz', package = 'phylen')
 
 untar(tgz, files = 'test.gff', exdir = tempdir())
-tesf_gff <- list.files(path = tempdir(),
-                  pattern = '^test_gff$',
+test_gff <- list.files(path = tempdir(),
+                  pattern = '^test.gff$',
                   full.names = TRUE)
 
 gff_table_df_file <- system.file('testdata',
@@ -14,7 +14,7 @@ gff_table_df <- readRDS(gff_table_df_file)
 
 
 test_that("extracting table from gff works",{
-  rl <- readLines(gff)
+  rl <- readLines(test_gff)
   tt <- phylen:::extractGffTable(rl)
   d <- dim(tt)
   d1 <- d[1]
