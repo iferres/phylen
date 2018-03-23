@@ -17,6 +17,8 @@ devtools::install_github("iferres/phylen")
 
 `phylen` depends on [HMMER 3.1b2](http://hmmer.org/) and [MAFFT](https://mafft.cbrc.jp/alignment/software/). You should have them installed on you `$PATH` variable prior to using this software.
 
+It also depends on [phangorn](https://cran.r-project.org/web/packages/phangorn/index.html) package, which in turn depends on `igraph`. Some system requirements are needed to install the latter, please check them [here](http://igraph.org/r/).
+
 ## Standard workflow
 
 This tutorial begins with the extraction of toy data attached on this package. It consists in 10 genomes of the *Campylobacterales* order, 5 of them are *Campylobacter* species and the other 5 are *Helicobacter* species. 
