@@ -8,6 +8,7 @@
 #' @param n_threads The number of cpus to use. Just used if nbs > 0.
 #' @param outPrefix A prefix to use on the output files.
 #' @param outDir Where to put the newick files.
+#' @param rearrangement Choice of tree rearrangement, only used if mode="ml".
 #' @param ... Further arguments to pass to \link[phangorn]{optim.pml}.
 #' @details Takes the core gene alignment and produces newick files. If \code{mode}
 #' is set to "nj", the outfile will have a "_nj.nwk" subffix. If set to "ml" and
@@ -34,6 +35,7 @@ computePhylo <- function(ali,
                          n_threads = 1,
                          outPrefix='phylo',
                          outDir='.',
+                         rearrangement='NNI',
                          ...){
 
   outDir <- normalizePath(outDir)
@@ -46,9 +48,16 @@ computePhylo <- function(ali,
 
   if (mode=='ml'){
     nwk <- paste0(outDir, '/', outPrefix, '_ml.nwk')
-    fitNJ <- pml(nj.tree, dat, model='GTR')
+    extras <- match.call(expand.dots = FALSE)$...
+    k <- 1
+    if(length(extras)){
+      if(("optGamma" %in% names(extras) ) & extras$optGamma) k <- 4
+    }
+    fitNJ <- pml(nj.tree, dat, model='GTR', k=k)
+
     fit <- optim.pml(object = fitNJ,
                      model = 'GTR',
+                     rearrangement = rearrangement,
                      ...)
 
     if (nbs > 0L){
