@@ -24,6 +24,16 @@
 #' in that range. The process wont continue until the user choose a level.
 #' @param phyloMode One of "nj" (Neighbour-joining) of "ml" (Maximum
 #' likelihood).
+#' @param nuclModel Nucleotide model evolution. Possible values:  JC, F81, K80,
+#' HKY, TrNe, TrN, TPM1, K81, TPM1u, TPM2, TPM2u, TPM3, TPM3u, TIM1e, TIM1,
+#' TIM2e, TIM2, TIM3e, TIM3, TVMe, TVM, SYM or GTR (default). See
+#' \link[phangorn]{optim.pml}.
+#' @param optGamma Logical value indicating whether gamma rate parameter gets
+#' optimized. See \link[phangorn]{optim.pml}. Default: TRUE.
+#' @param k Number of intervals of the discrete gamma distribution.
+#' See \link[phangorn]{pml}. Default: ifelse(optGamma, 4, 1).
+#' @param rearrangement Choice of tree rearrangement, only used if mode="ml".
+#' @param ... Further arguments to pass to \link[phangorn]{optim.pml}.
 #' @param nbs Number of bootstrap. If \code{phyloMode} is set to "nj", this
 #' parameter is ignored. If \code{phyloMode} is set to "ml", and nbs is set to
 #' 0, no bootstrap is performed. If \code{phyloMode} = "ml", and \code{nbs}>0,
@@ -93,6 +103,10 @@ phylen <- function(gffs = character(),
                    eval = 1e-30,
                    level,
                    phyloMode = 'ml',
+                   nuclModel = 'GTR',
+                   optGamma = TRUE,
+                   k = ifelse(optGamma, 4, 1),
+                   rearrangement = 'NNI',
                    nbs = 100L,
                    outDir = 'phylen',
                    aliPfx = 'supergene',
@@ -145,6 +159,13 @@ phylen <- function(gffs = character(),
                                                 'ginsi',
                                                 'linsi',
                                                 'einsi'))
+  mode <- match.arg(mode, c('ml','nj'))
+  nuclModel <- match.arg(nuclModel, c( 'JC', 'F81', 'K80', 'HKY', 'TrNe', 'TrN',
+                                     'TPM1', 'K81', 'TPM1u', 'TPM2', 'TPM2u',
+                                     'TPM3', 'TPM3u', 'TIM1e', 'TIM1', 'TIM2e',
+                                     'TIM2', 'TIM3e', 'TIM3', 'TVMe', 'TVM', 'SYM',
+                                     'GTR'))
+
 
   #wd
   if (dir.exists(outDir)){
@@ -288,6 +309,10 @@ phylen <- function(gffs = character(),
                         n_threads = n_threads,
                         outPrefix = treePfx,
                         outDir = wd,
+                        model = nuclModel,
+                        optGamma = optGamma,
+                        k = k,
+                        rearrangement = rearrangement,
                         ...)
   cat('Generating phylogeny.. DONE!\n\n')
 

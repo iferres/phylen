@@ -5,7 +5,8 @@
 \title{Compute Phylogeny}
 \usage{
 computePhylo(ali, mode = "ml", nbs = 100L, n_threads = 1,
-  outPrefix = "phylo", outDir = ".", rearrangement = "NNI", ...)
+  outPrefix = "phylo", outDir = ".", model = "GTR", optGamma = TRUE,
+  k = ifelse(optGamma, 4, 1), rearrangement = "NNI", ...)
 }
 \arguments{
 \item{ali}{The path to the alignment file.}
@@ -19,6 +20,17 @@ computePhylo(ali, mode = "ml", nbs = 100L, n_threads = 1,
 \item{outPrefix}{A prefix to use on the output files.}
 
 \item{outDir}{Where to put the newick files.}
+
+\item{model}{Nucleotide model evolution. Possible values:  JC, F81, K80,
+HKY, TrNe, TrN, TPM1, K81, TPM1u, TPM2, TPM2u, TPM3, TPM3u, TIM1e, TIM1,
+TIM2e, TIM2, TIM3e, TIM3, TVMe, TVM, SYM or GTR (default). See
+\link[phangorn]{optim.pml}.}
+
+\item{optGamma}{Logical value indicating whether gamma rate parameter gets
+optimized. See \link[phangorn]{optim.pml}. Default: TRUE.}
+
+\item{k}{Number of intervals of the discrete gamma distribution.
+See \link[phangorn]{pml}. Default: ifelse(optGamma, 4, 1).}
 
 \item{rearrangement}{Choice of tree rearrangement, only used if mode="ml".}
 

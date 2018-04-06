@@ -5,9 +5,11 @@
 \title{Compute Core Genome Alignment And Phylogeny}
 \usage{
 phylen(gffs = character(), hmmFile = character(), isCompressed = TRUE,
-  eval = 1e-30, level, phyloMode = "ml", nbs = 100L, outDir = "phylen",
-  aliPfx = "supergene", treePfx = "phylo", mafftMode = "linsi",
-  keepOgs = FALSE, n_threads = 1L, ...)
+  eval = 1e-30, level, phyloMode = "ml", nuclModel = "GTR",
+  optGamma = TRUE, k = ifelse(optGamma, 4, 1), rearrangement = "NNI",
+  nbs = 100L, outDir = "phylen", aliPfx = "supergene",
+  treePfx = "phylo", mafftMode = "linsi", keepOgs = FALSE,
+  n_threads = 1L, ...)
 }
 \arguments{
 \item{gffs}{A \code{character} vector with the gff file paths.}
@@ -38,6 +40,19 @@ in that range. The process wont continue until the user choose a level.}
 \item{phyloMode}{One of "nj" (Neighbour-joining) of "ml" (Maximum
 likelihood).}
 
+\item{nuclModel}{Nucleotide model evolution. Possible values:  JC, F81, K80,
+HKY, TrNe, TrN, TPM1, K81, TPM1u, TPM2, TPM2u, TPM3, TPM3u, TIM1e, TIM1,
+TIM2e, TIM2, TIM3e, TIM3, TVMe, TVM, SYM or GTR (default). See
+\link[phangorn]{optim.pml}.}
+
+\item{optGamma}{Logical value indicating whether gamma rate parameter gets
+optimized. See \link[phangorn]{optim.pml}. Default: TRUE.}
+
+\item{k}{Number of intervals of the discrete gamma distribution.
+See \link[phangorn]{pml}. Default: ifelse(optGamma, 4, 1).}
+
+\item{rearrangement}{Choice of tree rearrangement, only used if mode="ml".}
+
 \item{nbs}{Number of bootstrap. If \code{phyloMode} is set to "nj", this
 parameter is ignored. If \code{phyloMode} is set to "ml", and nbs is set to
 0, no bootstrap is performed. If \code{phyloMode} = "ml", and \code{nbs}>0,
@@ -66,6 +81,8 @@ fasta files containing the orthologous groups (DEFAULT: \code{FALSE}). If
 \code{outDir} directory.}
 
 \item{n_threads}{\code{integer} The number of cpus to use.}
+
+\item{...}{Further arguments to pass to \link[phangorn]{optim.pml}.}
 
 \item{...}{Further arguments to pass to \link[phangorn]{optim.pml}.}
 }

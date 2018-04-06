@@ -8,6 +8,14 @@
 #' @param n_threads The number of cpus to use. Just used if nbs > 0.
 #' @param outPrefix A prefix to use on the output files.
 #' @param outDir Where to put the newick files.
+#' @param model Nucleotide model evolution. Possible values:  JC, F81, K80,
+#' HKY, TrNe, TrN, TPM1, K81, TPM1u, TPM2, TPM2u, TPM3, TPM3u, TIM1e, TIM1,
+#' TIM2e, TIM2, TIM3e, TIM3, TVMe, TVM, SYM or GTR (default). See
+#' \link[phangorn]{optim.pml}.
+#' @param optGamma Logical value indicating whether gamma rate parameter gets
+#' optimized. See \link[phangorn]{optim.pml}. Default: TRUE.
+#' @param k Number of intervals of the discrete gamma distribution.
+#' See \link[phangorn]{pml}. Default: ifelse(optGamma, 4, 1).
 #' @param rearrangement Choice of tree rearrangement, only used if mode="ml".
 #' @param ... Further arguments to pass to \link[phangorn]{optim.pml}.
 #' @details Takes the core gene alignment and produces newick files. If \code{mode}
@@ -35,12 +43,20 @@ computePhylo <- function(ali,
                          n_threads = 1,
                          outPrefix='phylo',
                          outDir='.',
+                         model = 'GTR',
+                         optGamma = TRUE,
+                         k = ifelse(optGamma, 4, 1),
                          rearrangement='NNI',
                          ...){
 
   outDir <- normalizePath(outDir)
 
   mode <- match.arg(mode, c('ml','nj'))
+  model <- match.arg(model, c( 'JC', 'F81', 'K80', 'HKY', 'TrNe', 'TrN',
+                               'TPM1', 'K81', 'TPM1u', 'TPM2', 'TPM2u',
+                               'TPM3', 'TPM3u', 'TIM1e', 'TIM1', 'TIM2e',
+                               'TIM2', 'TIM3e', 'TIM3', 'TVMe', 'TVM', 'SYM',
+                               'GTR'))
 
   dat <- read.phyDat(ali, type = 'DNA', format = 'fasta')
   dm <- dist.hamming(dat)
@@ -48,15 +64,16 @@ computePhylo <- function(ali,
 
   if (mode=='ml'){
     nwk <- paste0(outDir, '/', outPrefix, '_ml.nwk')
-    extras <- match.call(expand.dots = FALSE)$...
-    k <- 1
-    if(length(extras)){
-      if(("optGamma" %in% names(extras) ) & extras$optGamma) k <- 4
-    }
-    fitNJ <- pml(nj.tree, dat, model='GTR', k=k)
+    # extras <- match.call(expand.dots = FALSE)$...
+    # k <- 1
+    # if(length(extras)){
+    #   if(("optGamma" %in% names(extras) ) & extras$optGamma) k <- 4
+    # }
+    fitNJ <- pml(nj.tree, dat, model=model, k=k)
 
     fit <- optim.pml(object = fitNJ,
-                     model = 'GTR',
+                     model = model,
+                     optGamma = optGamma,
                      rearrangement = rearrangement,
                      ...)
 
