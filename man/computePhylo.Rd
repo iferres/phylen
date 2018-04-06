@@ -5,7 +5,7 @@
 \title{Compute Phylogeny}
 \usage{
 computePhylo(ali, mode = "ml", nbs = 100L, n_threads = 1,
-  outPrefix = "phylo", outDir = ".", ...)
+  outPrefix = "phylo", outDir = ".", rearrangement = "NNI", ...)
 }
 \arguments{
 \item{ali}{The path to the alignment file.}
@@ -19,6 +19,8 @@ computePhylo(ali, mode = "ml", nbs = 100L, n_threads = 1,
 \item{outPrefix}{A prefix to use on the output files.}
 
 \item{outDir}{Where to put the newick files.}
+
+\item{rearrangement}{Choice of tree rearrangement, only used if mode="ml".}
 
 \item{...}{Further arguments to pass to \link[phangorn]{optim.pml}.}
 }
