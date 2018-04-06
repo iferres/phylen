@@ -298,8 +298,8 @@ phylen <- function(gffs = character(),
                 nrow(pm),
                 ' isolates have been used in the alignment.\n',
                 'Returning an object of class "phylo" with ',
-                length(phylo$tree$tip.label), 'tips and ',
-                phylo$tree$Nnode, ' nodes.\n')
+                length(phylo$tip.label), 'tips and ',
+                phylo$Nnode, ' nodes.\n')
   cat(fin)
   return(phylo)
 
