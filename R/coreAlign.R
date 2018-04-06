@@ -33,7 +33,6 @@
 #' @param k Number of intervals of the discrete gamma distribution.
 #' See \link[phangorn]{pml}. Default: ifelse(optGamma, 4, 1).
 #' @param rearrangement Choice of tree rearrangement, only used if mode="ml".
-#' @param ... Further arguments to pass to \link[phangorn]{optim.pml}.
 #' @param nbs Number of bootstrap. If \code{phyloMode} is set to "nj", this
 #' parameter is ignored. If \code{phyloMode} is set to "ml", and nbs is set to
 #' 0, no bootstrap is performed. If \code{phyloMode} = "ml", and \code{nbs}>0,

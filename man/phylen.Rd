@@ -83,8 +83,6 @@ fasta files containing the orthologous groups (DEFAULT: \code{FALSE}). If
 \item{n_threads}{\code{integer} The number of cpus to use.}
 
 \item{...}{Further arguments to pass to \link[phangorn]{optim.pml}.}
-
-\item{...}{Further arguments to pass to \link[phangorn]{optim.pml}.}
 }
 \value{
 A core genome alignment file, a phylogenetic tree in newick format
