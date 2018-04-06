@@ -10,12 +10,15 @@ Phylen is an R package that performs automatic phylogenetic reconstruction given
 The easiest way to install this package is using `devtools` package:
 
 ``` r
+if(!require(devtools)){
+   install.packages("devtools")
+}
 devtools::install_github("iferres/phylen")
 ```
 
 ### Requirements
 
-`phylen` depends on [HMMER 3.1b2](http://hmmer.org/) and [MAFFT](https://mafft.cbrc.jp/alignment/software/). You should have them installed on you `$PATH` variable prior to using this software.
+`phylen` depends on [HMMER 3.1b2](http://hmmer.org/) and [MAFFT](https://mafft.cbrc.jp/alignment/software/). You should have them installed on you `$PATH` variable prior to using this software. Besure that the following MAFFT aliases are also installed: `linsi` (alias for `mafft --maxiterate 1000 --localpair`), `ginsi` (alias for `mafft --maxiterate 1000 --globalpair`) and `einsi` (alias for `mafft --ep 0 --maxiterate 1000 --genafpair`). This shortcuts are installed together with `mafft` if you download and install the software from the MAFFT webpage (link above), but probably not if use a package manager as `apt` or `brew`.
 
 It also depends on [phangorn](https://cran.r-project.org/web/packages/phangorn/index.html) package, which in turn depends on `igraph`. Some system requirements are needed to install the latter, please check them [here](http://igraph.org/r/).
 

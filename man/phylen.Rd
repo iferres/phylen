@@ -89,6 +89,12 @@ HMMER 3.1b2 is used as search engine, and MAFFT aligner is used to align the
 orthologous groups. Both software must be installed before running this
 pipeline.
 
+\strong{Note:} \code{mafft} aliases \code{ginsi}, \code{linsi}, and
+\code{einsi} (see above) must be also installed. This shortcuts are by
+default installed together with mafft if you download and install the
+software from the \href{https://mafft.cbrc.jp/alignment/software/}{MAFFT webpage},
+but probably not if use a package manager as \code{apt} or \code{brew}.
+
 \link{phangorn} package is used to perform the phylogenetic inference.
 }
 \references{

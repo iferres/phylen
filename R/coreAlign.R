@@ -60,6 +60,12 @@
 #' orthologous groups. Both software must be installed before running this
 #' pipeline.
 #'
+#' \strong{Note:} \code{mafft} aliases \code{ginsi}, \code{linsi}, and
+#' \code{einsi} (see above) must be also installed. This shortcuts are by
+#' default installed together with mafft if you download and install the
+#' software from the \href{https://mafft.cbrc.jp/alignment/software/}{MAFFT webpage},
+#' but probably not if use a package manager as \code{apt} or \code{brew}.
+#'
 #' \link{phangorn} package is used to perform the phylogenetic inference.
 #' @importFrom parallel mclapply
 #' @importFrom seqinr write.fasta
@@ -109,6 +115,19 @@ phylen <- function(gffs = character(),
   if(Sys.which('mafft')==''){
     stop('mafft is not in $PATH. Please install it before running this function.')
   }
+
+  if(Sys.which('ginsi')==''){
+    stop('ginsi is not in $PATH. Please install it before running this function. See ?phylen for more information.')
+  }
+
+  if(Sys.which('einsi')==''){
+    stop('einsi is not in $PATH. Please install it before running this function. See ?phylen for more information.')
+  }
+
+  if(Sys.which('linsi')==''){
+    stop('linsi is not in $PATH. Please install it before running this function. See ?phylen for more information.')
+  }
+
 
   if (any(!file.exists(gffs))){
     stop("One or more gff files doesn't exists.")
