@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/iferres/phylen.svg?branch=master)](https://travis-ci.org/iferres/phylen)
+[![Travis-CI Build Status](https://travis-ci.org/iferres/phylen.svg?branch=master)](https://travis-ci.org/iferres/phylen) [![DOI](http://joss.theoj.org/papers/10.21105/joss.00593/status.svg)](https://doi.org/10.21105/joss.00593)
 
 phylen
 ================
@@ -223,6 +223,5 @@ If you want to contribute to the development of this software, please refer to t
 
 ## Citation
 
-Phylen manuscript is under review in [JOSS](https://joss.theoj.org/).
+Ferrés et al., (2018). **Phylen: automatic phylogenetic reconstruction using the EggNOG database.** *Journal of Open Source Software*, 3(25), 593, [DOI: 10.21105/joss.00593](http://joss.theoj.org/papers/10.21105/joss.00593)
 
-This package has been successfully used in already published papers, see `paper.md` on this repository for details.
