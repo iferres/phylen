@@ -169,7 +169,7 @@ phylen <- function(gffs = character(),
 
     tmp <- tempdir()
     aas <- extractSeqsFromGff3(x, keep = 'none', in.path = tmp, write.in.path = 'aa')
-    aas <- paste0(tmp,'/', sub('gff$','faa',rev(strsplit(x,'/')[[1]])[1]))
+    aas <- paste0(tmp,'/', sub('gff$','faa',gsub('#','_',basename(x))))
 
     blout <- hmmSearch(aas, hmm = hmm[1], n_threads = 0)
     file.remove(aas)
