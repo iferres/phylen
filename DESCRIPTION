@@ -1,7 +1,7 @@
 Package: phylen
 Type: Package
 Title: Search Core Genes Using HMMs, Compute Multiple Alignment, Concatenate And Compute Phylogeny
-Version: 0.1.0
+Version: 0.1.2
 Authors@R: c(
     person("Ignacio", "Ferres", email = "iferres@pasteur.edu.uy", role = c("aut", "cre")),
     person("Gregorio", "Iraola", email = "giraola@pasteur.edu.uy", role = "aut")
