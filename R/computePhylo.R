@@ -47,6 +47,11 @@ computePhylo <- function(ali,
   nj.tree <- NJ(dm)
 
   if (mode=='ml'){
+    # Save nj (for impatient people)
+    nwk_nj <- paste0(outDir, '/', outPrefix, '_nj.nwk')
+    write.tree(nj.tree, file = nwk_nj)
+    message(paste0('Written NJ tree at ', nkw_nj))
+
     nwk <- paste0(outDir, '/', outPrefix, '_ml.nwk')
     extras <- match.call(expand.dots = FALSE)$...
     k <- 1
